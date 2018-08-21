@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2018 Tcl Corporation Limited -->
+
+<permissions>
+    <library name="com.wapi.wapicertstore"
+             file="/system/framework/wapicertstore.jar" />
+</permissions>

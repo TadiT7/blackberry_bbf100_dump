@@ -1,0 +1,84 @@
+// sdm636
+test::slog(slognotice_c, "sdm636_power version: 04/18/2018 17:18")
+
+/* Virtual sensors */
+vlist:: {
+    // power models
+    // TODO: all models need to be updated
+    virt_est_cpu_power: export=@ro {
+        (0.0001240*cpu_freq0^2 - 0.02949*cpu_freq0 + 40.14 + // little core 0
+        0.0001240*cpu_freq1^2 - 0.02949*cpu_freq1 + 40.14 + // little core 1
+        0.0001409*cpu_freq2^2 - 0.08589*cpu_freq2 + 74.13 + // big core 2
+        0.0001409*cpu_freq3^2 - 0.08589*cpu_freq3 + 74.13) * (v_bat / 1000 ); // big core 2
+        6.3 W // max cpu power
+    }
+    virt_est_gpu_power: export=@ro {
+        (0.0016600*gpu_freq^2  + 0.07876*gpu_freq  + 23.34) * gpu_load; // gpu mW
+        1.0 A * (v_bat / 1000 ) // max gpu power
+    }
+    virt_est_display_power: export=@ro {
+        (0.6958 * display_backlight + 53.64 ) * (v_bat / 1000 );
+        607mA * (v_bat / 1000 ) // max display power
+    }
+    virt_est_voice_call_power: export=@ro {
+        if(voice_call, 1250.0mW);
+        1250.0 mW // max voice call power
+    }
+    virt_est_speaker_power: export=@ro {
+        loud_speaker_active * 400mW; // loud speaker, need to know volume to get a better estimate
+        400mW // max speaker power
+    }
+    virt_est_torch_power: export=@ro {
+        (torch_brightness_front + torch_brightness_rear) * (v_bat / 1000 ); // torch current
+        313 mA * (v_bat / 1000 ) // max torch current
+    }
+
+    virt_est_sys_power: export=@ro {
+        virt_est_cpu_power +
+        virt_est_gpu_power +
+        virt_est_display_power +
+        virt_est_voice_call_power +
+        virt_est_speaker_power +
+        virt_est_torch_power;
+        14W // if the current cannot be computed, assume worst case current
+        // TODO: add camera isp power
+    }
+
+    virt_est_sys_power_err: export=@ro {
+        (1.104 * display_backlight + 9.224 ) * (v_bat / 1000 ) +        // display error
+        data_over_cellular * 1500mW + // cellular data worst case
+        data_over_wlan * 480mW +      // wlan worst case
+        usb_otg * 4500mW + // assume 900mA for USB OTG
+        0.0 mW
+    }
+
+    virt_sys_power: export=@ro { //in mW
+        (v_bat * i_bat) / 1000;
+        0.0 mW // if the system power cannot be measured, set it to 0 mW
+    }
+
+    usb_type_current_lut(x) {
+        lute(x,((0,0mA),(1,500mA),(2,i_usb_max2),(3,0))) // (3, max(1.5*i_usb_max3+i_usb_max4,500mA))
+    }
+    virt_input_current_max: export=@ro { //in mA
+        if(i_usb_limit == 0, 0mA, usb_type_current_lut(usb_type))
+    }
+
+    virt_sys_current_max: export=@ro { //in mA
+        i_bat + virt_input_current_max
+    }
+
+    virt_sys_power_max: export=@ro { //in mW
+        v_bat * (i_bat + virt_input_current_max) / 1000;
+        0.0 mW // if the maximum system power cannot be measured, set it to 0 mW
+    }
+
+    virt_unexpected_energy: export=@ro { // in Joules
+        ( 2s * 5 * sma(virt_sys_power_max - (virt_est_sys_power + virt_est_sys_power_err),5) / 1000 );
+        0.0 J
+    }
+
+    virt_fuse_count: export=@ro {
+        -1
+    }
+}

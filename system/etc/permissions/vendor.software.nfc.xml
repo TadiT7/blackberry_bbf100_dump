@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+     Copyright (c) 2014 by BlackBerry Limited. All Rights Reserved.
+     BlackBerry Limited does not grant any rights,
+     including the accompanying associated documentation,
+     (the Software) for any purpose whatsoever, including without limitation
+     any rights to copy, use or distribute the Software. Your rights to use the
+     Software shall be only as set forth in any separate license between you and
+     BlackBerry Limited.
+-->
+
+<!-- This is the standard feature indicating that the device supports the
+     BlackBerry extensions to the Near-Field Communications (NFC) API. -->
+<permissions>
+    <feature name="blackberry.software.nfc" />
+    <library name="com.blackberry.nfc" file="/system/framework/vendor.nfc.jar" />
+</permissions>

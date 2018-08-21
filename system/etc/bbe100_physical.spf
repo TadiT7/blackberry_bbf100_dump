@@ -1,0 +1,631 @@
+// sdm636
+test::slog(slognotice_c, "sdm660_physical version: 2018/04/18 17:20")
+
+/* Constants */
+constant:: {
+    nominal_c { // radio, camera mitigation
+        0
+    }
+
+    active_c { // notifications
+        1
+    }
+
+    wlan_disabled_c { // wlan mitigation
+        1
+    }
+
+    reduce_data_rate_c { // radio mitigation
+        1
+    }
+
+    data_off_c { // radio mitigation
+        2
+    }
+
+    e911_c { // radio mitigation
+        3
+    }
+
+    reduce_fps1_c { // camera mitigation
+        1
+    }
+
+    reduce_fps2_c { // camera mitigation
+        2
+    }
+
+    cameraoff_c { // camera mitigation
+        10
+    }
+
+    torch_enabled_c {
+        0
+    }
+
+    torch_disabled_c {
+        1
+    }
+
+    vdd_restriction_enable_c {
+        1
+    }
+
+    vdd_restriction_disable_c {
+        0
+    }
+
+    // User notifications
+    notify_status_data_therm {
+        69632 // 0x11000
+    }
+    notify_status_e911_therm {
+        73728 // 0x12000
+    }
+    notify_status_wlan_therm {
+        77824 // 0x13000
+    }
+    notify_status_camera_therm {
+        81920 // 0x14000
+    }
+    notify_status_torch_therm {
+        86016 // 0x15000
+    }
+    notify_status_torch_batt {
+        90112 // 0x16000
+    }
+    notify_status_device_hot {
+        94208 // 0x17000
+    }
+    notify_status_cpu {         // 0x20000
+        131072
+    }
+    notify_status_cluster0 {    // 0x21000
+        135168
+    }
+    notify_status_cluster1 {    // 0x22000
+        139264
+    }
+    notify_status_gpu {         // 0x30000
+        196608
+    }
+
+    // state variables
+    portrait_c {
+        1
+    }
+    landscape_c {
+        2
+    }
+
+    // android.display.rotation
+    portrait_up_c {
+        0
+    }
+    landscape_lt_c {
+        1
+    }
+    portrait_dn_c {
+        2
+    }
+    landscape_rt_c {
+        3
+    }
+}
+
+/* Sensors */
+vlist:: {
+    // on-die sensors TODO: check the sensor location
+    qc_tsens0: minupdate=1s, export=@ro {
+        range(read( "qcom", "-n tsens_tz_sensor0  -m 0.001" ),(-50,125))
+    }
+    qc_tsens1: minupdate=1s, export=@ro {
+        range(read( "qcom", "-n tsens_tz_sensor1  -m 0.001" ),(-50,125))
+    }
+    qc_tsens2: minupdate=1s, export=@ro {
+        range(read( "qcom", "-n tsens_tz_sensor2  -m 0.001" ),(-50,125))
+    }
+    qc_tsens3: minupdate=1s, export=@ro {
+        range(read( "qcom", "-n tsens_tz_sensor3  -m 0.001" ),(-50,125))
+    }
+    qc_tsens4: minupdate=1s, export=@ro {
+        range(read( "qcom", "-n tsens_tz_sensor4  -m 0.001" ),(-50,125))
+    }
+    qc_tsens5: minupdate=1s, export=@ro {
+        range(read( "qcom", "-n tsens_tz_sensor5  -m 0.001" ),(-50,125))
+    }
+    qc_tsens6: minupdate=1s, export=@ro {
+        range(read( "qcom", "-n tsens_tz_sensor6  -m 0.001" ),(-50,125))
+    }
+    qc_tsens7: minupdate=1s, export=@ro {
+        range(read( "qcom", "-n tsens_tz_sensor7  -m 0.001" ),(-50,125))
+    }
+    qc_tsens8: minupdate=1s, export=@ro {
+        range(read( "qcom", "-n tsens_tz_sensor8  -m 0.001" ),(-50,125))
+    }
+    qc_tsens9: minupdate=1s, export=@ro {
+        range(read( "qcom", "-n tsens_tz_sensor9  -m 0.001" ),(-50,125))
+    }
+    qc_tsens10: minupdate=1s, export=@ro {
+        range(read( "qcom", "-n tsens_tz_sensor10 -m 0.001" ),(-50,125))
+    }
+    qc_tsens11: minupdate=1s, export=@ro {
+        range(read( "qcom", "-n tsens_tz_sensor11 -m 0.001" ),(-50,125))
+    }
+    qc_tsens12: minupdate=1s, export=@ro {
+        range(read( "qcom", "-n tsens_tz_sensor12 -m 0.001" ),(-50,125))
+    }
+    qc_tsens13: minupdate=1s, export=@ro {
+        range(read( "qcom", "-n tsens_tz_sensor13 -m 0.001" ),(-50,125))
+    }
+
+    // on-die sensor interrupts TODO: tune interrupt thresholds
+    qc_tsens1event : event=@true { // cpu0:0-3
+        read("qcom", "-n tsens_tz_sensor1 -l 50000 -h 60000 -m 0.001");
+        qc_tsens1
+    }
+    qc_tsens3event : event=@true { // cpu1:0
+        read( "qcom", "-n tsens_tz_sensor3 -l 50000 -h 60000 -m 0.001" );
+        qc_tsens3
+    }
+    qc_tsens4event : event=@true { // cpu1:1
+        read( "qcom", "-n tsens_tz_sensor4 -l 50000 -h 60000 -m 0.001" );
+        qc_tsens4
+    }
+    qc_tsens5event : event=@true { // cpu1:2
+        read( "qcom", "-n tsens_tz_sensor5 -l 50000 -h 60000 -m 0.001" );
+        qc_tsens5
+    }
+    qc_tsens6event : event=@true { // cpu1:3
+        read( "qcom", "-n tsens_tz_sensor6 -l 50000 -h 60000 -m 0.001" );
+        qc_tsens6
+    }
+    qc_tsens8event : event=@true { // gpu
+        read( "qcom", "-n tsens_tz_sensor8 -l 65000 -h 95000 -m 0.001" );
+        qc_tsens8
+    }
+
+    qc_pmic        : minupdate=1s, export=@ro {
+        range(read("spf_sysfs",  "-n /sys/class/hwmon/hwmon2/device/die_temp    -m 0.001"),(-50,120))
+    }
+
+    th_msm         : minupdate=1s, export=@ro {
+        range(read("spf_sysfs",  "-n /sys/class/hwmon/hwmon2/device/msm_therm   -m 1.0"),(-50,120))
+    }
+
+    xo_therm       : minupdate=1s, export=@ro {
+        range(read("spf_sysfs",  "-n /sys/class/hwmon/hwmon2/device/xo_therm -m 1.0"),(-50,120))
+    }
+
+    th_emmc          : minupdate=1s, export=@ro {
+        range(read("spf_sysfs",  "-n /sys/class/hwmon/hwmon2/device/emmc_therm   -m 1.0"),(-50,120))
+    }
+
+    th_ref          : minupdate=1s, export=@ro {
+        range(read("spf_sysfs",  "-n /sys/class/hwmon/hwmon2/device/quiet_therm   -m 1.0"),(-50,120))
+    }
+
+    th_pa          : minupdate=1s, export=@ro {
+        range(read("spf_sysfs",  "-n /sys/class/hwmon/hwmon2/device/pa_therm0   -m 1.0"),(-50,120))
+    }
+
+    //Battery thermistor
+    qc_batt    : minupdate=5s, export=@ro {
+        range(read("spf_sysfs",  "-n /sys/class/power_supply/battery/temp       -m 0.1"),(-50,120))
+    }
+
+    // Battery manager
+    // Battery voltage, mV
+    v_bat        : minupdate=5s, export=@ro {
+        read("spf_sysfs", "-n /sys/class/power_supply/battery/voltage_now -m 0.001");
+        read("spf_sysfs", "-n /sys/class/power_supply/bms/voltage_now     -m 0.001")
+    }
+    // State-of-charge, %
+    soc          : minupdate=5s, export=@ro {
+        range(read("spf_sysfs", "-n /sys/class/power_supply/battery/capacity"),(0,100));
+        range(read("spf_sysfs", "-n /sys/class/power_supply/bms/capacity"),(0,100))
+    }
+    // Battery resistance, mOhm
+    esr          : minupdate=5s, export=@ro {
+        read("spf_sysfs", "-n /sys/class/power_supply/bms/resistance -m 0.001")
+    }
+    // Battery current, mA
+    i_bat        : minupdate=1s, export=@ro {
+        read("spf_sysfs", "-n /sys/class/power_supply/battery/current_now -m 0.001");
+        read("spf_sysfs", "-n /sys/class/power_supply/bms/current_now     -m 0.001")
+    }
+    // Open Circuit Voltage, mV
+    ocv          : minupdate=5s, export=@ro {
+        read("spf_sysfs", "-n /sys/class/power_supply/bms/voltage_ocv -m 0.001");
+        v_bat - (-1 * i_bat) * esr / 1000
+    }
+    usb_charging : minupdate=5s, export=@ro {
+        read("spf_sysfs", "-n /sys/class/power_supply/usb/online");
+        @false
+    }
+    // Maximum usb input current, mA
+    i_usb_max    : minupdate=1s, export=@ro {
+        range(read("spf_sysfs", "-n /sys/class/power_supply/usb/current_max -m 0.001"),(0,3000))
+    }
+    i_usb_max2   : minupdate=1s, export=@ro {
+        read("spf_sysfs", "-n /sys/class/power_supply/battery/input_current_max -m 0.001")
+    }
+    i_usb_max3: minupdate=1s, export=@ro {
+        read("spf_sysfs", "-n /sys/class/power_supply/parallel/current_max -m 0.001")
+    }
+    i_usb_max4   : minupdate=1s, export=@ro {
+        read("spf_sysfs", "-n /sys/class/power_supply/parallel/constant_charge_current_max -m 0.001")
+    }
+    usblut_r(x) {
+        lute(x,((0,2900mA),(1,2500mA),(2,2000mA),(3,1500mA),(4,1000mA),(5,500mA))) // qcom,thermal-mitigation = <2900000 2500000 2000000 1500000 1000000 500000>
+    }
+    // Input current limit, mA
+    i_usb_limit  : minupdate=1s, export=@ro {
+        usblut_r(range(read("spf_sysfs", "-n /sys/class/power_supply/battery/system_temp_level"),(0,6)))
+    }
+    usb_type    : minupdate=1s, export=@ro {
+        read("spf_sysfs", "-n /sys/class/power_supply/usb/type -x Unknown,USB,USB_DCP,USB_HVDCP,USB_PD")
+    }
+
+    // CPU frequencies, MHz
+    cpu_freq0: minupdate=1s, export=@ro {
+        read("spf_sysfs",  "-n /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq -m 0.001"); /* MHz */
+        0 MHz // if the core is offline, the read above will return an error
+    }
+    cpu_freq1: minupdate=1s, export=@ro {
+        read("spf_sysfs",  "-n /sys/devices/system/cpu/cpu1/cpufreq/cpuinfo_cur_freq -m 0.001"); /* MHz */
+        0 MHz
+    }
+    cpu_freq2: minupdate=1s, export=@ro {
+        read("spf_sysfs",  "-n /sys/devices/system/cpu/cpu2/cpufreq/cpuinfo_cur_freq -m 0.001"); /* MHz */
+        0 MHz
+    }
+    cpu_freq3: minupdate=1s, export=@ro {
+        read("spf_sysfs",  "-n /sys/devices/system/cpu/cpu3/cpufreq/cpuinfo_cur_freq -m 0.001"); /* MHz */
+        0 MHz
+    }
+    cpu_freq4: minupdate=1s, export=@ro {
+        read("spf_sysfs",  "-n /sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_cur_freq -m 0.001"); /* MHz */
+        0 MHz
+    }
+    cpu_freq5: minupdate=1s, export=@ro {
+        read("spf_sysfs",  "-n /sys/devices/system/cpu/cpu5/cpufreq/cpuinfo_cur_freq -m 0.001"); /* MHz */
+        0 MHz
+    }
+    cpu_freq6: minupdate=1s, export=@ro {
+        read("spf_sysfs",  "-n /sys/devices/system/cpu/cpu6/cpufreq/cpuinfo_cur_freq -m 0.001"); /* MHz */
+        0 MHz
+    }
+    cpu_freq7: minupdate=1s, export=@ro {
+        read("spf_sysfs",  "-n /sys/devices/system/cpu/cpu7/cpufreq/cpuinfo_cur_freq -m 0.001"); /* MHz */
+        0 MHz
+    }
+
+    // GPU frequencies, MHz
+    gpu_freq: minupdate=1s, export=@ro {
+        read("spf_sysfs",  "-n /sys/class/kgsl/kgsl-3d0/gpuclk -m 0.000001");
+        0 MHz
+    }
+    // GPU load, %
+    gpu_load: minupdate=1s, export=@ro {
+        range(read("spf_sysfs", "-n /sys/class/kgsl/kgsl-3d0/gpubusy -r ratio"),(0,100)) * 0.01;
+        0%
+    }
+
+    // Vdd restriction state
+    vdd_state: minupdate=1s, export=@ro {
+        read("spf_sysfs", "-n /sys/module/msm_thermal/vdd_restriction/enabled");
+        0
+    }
+
+    // Backlight
+    display_backlight: minupdate=5s, export=@ro {
+        range(read("spf_sysfs",  "-n /sys/class/leds/lcd-backlight/brightness"),(0,255)) * 0.39215686 // convert from 0-255 to 0-100(%)
+    }
+    display_backlight_boost: minupdate=1s, export=@ro {
+        read("spf_sysfs",  "-n /sys/class/panel_high_brightness_mode/status -x off,on")
+    }
+    keypad_backlight: minupdate=5s, export=@ro {
+        0 // TODO: update this or remove it
+    }
+
+    // Radio
+    /* Voice call status
+     * IDLE      0
+     * RINGING   1
+     * OFFHOOK   2
+     */
+    voice_call : minupdate=2s, export=@ro {
+        read("android", "intent.action.PHONE_STATE");
+        @false
+    }
+
+    /* WLAN status
+     * 0 - Off
+     * 1 - On, but not connected
+     * 2 - Connected
+     */
+    wlan_active : minupdate=2s, export=@ro {
+        read("spf_sysfs", "-n /sys/class/net/wlan0/operstate -x down,dormant,up");
+        2
+    }
+
+    data_over_cellular : minupdate=2s, export=@ro {
+        read("android", "mobile.state");
+        @true
+    }
+
+    data_over_wlan : minupdate=2s, export=@ro {
+        read("android", "wifi.state");
+        @false
+    }
+
+    // audio
+    loud_speaker_active : minupdate=2s, export=@ro {
+        // TODO: update this or remove it
+        @true
+    }
+
+    // Device state
+    booted     : minupdate=1s, export=@ro {
+        read("android", "intent.action.BOOT_COMPLETED");
+        @false
+    }
+    headset    : minupdate=1s, export=@ro {
+        read("android", "intent.action.HEADSET_PLUG");
+        @false
+    }
+    screen_event: export=@ro, event=@true {
+        read("android", "screen.state");
+        @true
+    }
+    screen     : minupdate=1s, export=@ro {
+        read("android", "screen.state");
+        @true
+    }
+    display_rotation : minupdate=1s, export=@ro {
+        read("android", "display.rotation");
+        portrait_up_c
+    }
+    display_orientation : minupdate=1s, export=@ro {
+        read("android", "display.orientation");
+        0
+    }
+    gps_active : minupdate=1s, export=@ro {
+        read("android", "gps.active");
+        0
+    }
+    hdmi_plugged : minupdate=1s, export=@ro {
+        read("android", "hdmi_plugged");
+        0
+    }
+    torch_brightness_front : minupdate=1s, export=@ro {
+        read("spf_sysfs", "-n /sys/class/leds/led_torch/brightness");
+        0
+    }
+    torch_brightness_rear : minupdate=1s, export=@ro {
+        read("spf_sysfs", "-n /sys/class/leds/led:torch_0/brightness") +
+        read("spf_sysfs", "-n /sys/class/leds/led:torch_1/brightness");
+        0
+    }
+    usb_otg : minupdate=2s, export=@ro {
+        read("spf_sysfs", "-n /sys/class/power_supply/usb/usb_otg");
+        @false
+    }
+
+    // battery saver mode state
+    battery_saver_event : export=@ro, event=@true {
+        read("android", "power.save");
+        @false
+    }
+    battery_saver : minupdate=1s, export=@ro {
+        read("android", "power.save");
+        @false
+    }
+
+    // application based mitigation
+    app_mitigation_event : export=@ro, event=@true {
+        read("app", "profile.id");
+        nominal_c // do not mitigate if the profile.id cannot be read
+    }
+
+    app_mitigation_temperature : minupdate=1s, export=@ro {
+        read("app", "profile.temperature");
+        0 C
+    }
+}
+
+/* Actions */
+vlist:: {
+    backlightwrite(x) {
+        evalall(
+            write("lcd", "brightness", round(x*100) ),
+            slog(slognotice_c, "mitigation:backlight("<<x*100<<"%)")
+        )
+    }
+
+    //freq write for cores 0,1,2,3
+    cpuwrite_cluster0(x) {
+        evalall(
+            write("qcom", "clusterfreq_request0", x*1000 ),
+            slog(slognotice_c, "mitigation:cpu0("<<x<<"MHz)"),
+            write("spf", "notify.status", notify_status_cluster0+x)
+        )
+    }
+
+    //freq write for cores 4,5,6,7
+    cpuwrite_cluster1(x) {
+        evalall(
+            write("qcom", "clusterfreq_request1", x*1000 ),
+            slog(slognotice_c, "mitigation:cpu1("<<x<<"MHz)"),
+            write("spf", "notify.status", notify_status_cluster1+x)
+        )
+    }
+
+    clustermask {
+        0;
+        0
+    }
+
+    clusterlut(x) {
+        //#CPUs required to be online -> Value to write (1 in a bit position => equivalent cpu offlined)
+        lute(x,((0,15),(1,14),(2,12),(3,8),(4,0)));        // little cores
+        lute(x,((0,240),(1,176),(2,160) ,(3,128),(4,0)))   // big cores
+    }
+    clusterwrite(x,y) {
+        evalall(
+            set(clustermask[x],clusterlut[x](y)),
+            write("qcom", "hotplug_request_mask", clustermask[0] + clustermask[1]), // should be a bitwise or, but that is not yet implemented
+            slog(slognotice_c, "mitigation:cluster"<<x<<"("<<y<<")"),
+            write("spf", "notify.status", notify_status_cpu+clustermask[0]+clustermask[1])
+        )
+    }
+
+    gpuwrite(x) {
+        evalall(
+            write("qcom", "gpufreq_request_gpu0", x*1000000 ),
+            slog(slognotice_c, "mitigation:gpu("<<x<<"MHz)"),
+            write("spf", "notify.status", notify_status_gpu+x)
+        )
+    }
+
+    vddrestrictionwrite(x) {
+        evalall(
+            write("spf_sysfs", "-n /sys/module/msm_thermal/vdd_restriction/enabled", x),
+            //write("qcom", "vdd_restriction_request0", x ),
+            slog(slognotice_c, "mitigation:vdd_restriction("<<x<<")")
+        )
+    }
+
+    wlanwrite(x) {
+        evalall(
+            write("wifi", "-n /state", x ),
+            slog(slognotice_c, "mitigation:wlan("<<x<<")")
+        )
+    }
+
+    radiowrite(x) {
+        evalall(
+            // SPF Helper mitigation action
+            write("radio", "-n /state", x),
+            slog(slognotice_c, "mitigation:radio("<<x<<")")
+        )
+    }
+
+    gsmpalut(x) {
+        lute(x,((29dBm,2),(30dBm,1),(33dBm,0)))
+    }
+    gsm_pawrite(x) {
+        evalall(
+            write("radio", "power.peak", gsmpalut(x) ),
+            slog(slognotice_c, "mitigation:gsm_pa("<<x<<"dBm)")
+        )
+    }
+
+    modemwrite(x) { // deprecated
+        evalall(
+            write("radio", "power.avg", x ),
+            slog(slognotice_c, "mitigation:modem("<<x<<")")
+        )
+    }
+
+    camerawrite(x) {
+        evalall(
+            write("camera", "level", x),
+            slog(slognotice_c, "mitigation:camera("<<x<<")")
+        )
+    }
+
+    // LUT found in: kernel/arch/arm64/boot/dts/idol4s_cn/msm8996-bbry-argon.dtsi
+    // oem,flash-mitigation-levels = <2000 1800 1600 1400 1200 1000 850 700 550 400 200 100 0>;
+    // oem,flash-mitigation-levels = <500 500 500 500 500 500 500 500 500 0 0 0 0>;
+    flashlut(x) {
+        lute(x,((0mA,12),(100mA,11),(200mA,10),(400mA,9),(550mA,8),(700mA,7),(850mA,6),(1000mA,5),(1200mA,4),(1400mA,3),(1600mA,2),(1800mA,1),(2000mA,0)))
+    }
+    flashwrite(x) {
+        evalall(
+            write("camera", "flash.level", flashlut(x)),
+            slog(slognotice_c, "mitigation:flash("<<x<<")")
+        )
+    }
+
+    torchwrite(x) {
+        evalall(
+            write("camera", "torch.level", x),
+            slog(slognotice_c, "mitigation:torch("<<x<<")")
+        )
+    }
+
+    usblut(x) {
+        lute(x,((0mA,6),(500mA,5),(1000mA,4),(1500mA,3),(2000mA,2),(2500mA,1),(3000mA,0))) //qcom,thermal-mitigation = <3000 2500 2000 1500 1000 500 0>
+    }
+    usbwrite(x) {//x in mA
+        evalall(
+            write("spf_sysfs", "-n /sys/class/power_supply/battery/system_temp_level -e", usblut(x)),
+            slog(slognotice_c, "mitigation:usb("<<x<<"mA)")
+        )
+    }
+
+    // force an update of the battery measurements
+    update_bat {
+        write("spf_sysfs", "-n /sys/class/power_supply/bms/update_now", 1)
+    }
+
+    // Notifications
+    notify_data_thermwrite(x) {
+        evalall(
+            write("spf", "notify.status", notify_status_data_therm+x),
+            slog(slognotice_c, "notify:data_therm("<<x<<")")
+        )
+    }
+    notify_e911_thermwrite(x) {
+        evalall(
+            write("spf", "notify.status", notify_status_e911_therm+x),
+            slog(slognotice_c, "notify:e911_therm("<<x<<")")
+        )
+    }
+    notify_wlan_thermwrite(x) {
+        evalall(
+            write("spf", "notify.status", notify_status_wlan_therm+x),
+            slog(slognotice_c, "notify:wlan_therm("<<x<<")")
+        )
+    }
+    notify_camera_thermwrite(x) {
+        evalall(
+            write("spf", "notify.status", notify_status_camera_therm+x),
+            slog(slognotice_c, "notify:camera_therm("<<x<<")")
+        )
+    }
+    notify_torch_thermwrite(x) {
+        evalall(
+            write("spf", "notify.status", notify_status_torch_therm+x),
+            slog(slognotice_c, "notify:torch_therm("<<x<<")")
+        )
+    }
+    notify_torch_battwrite(x) {
+        evalall(
+            write("spf", "notify.status", notify_status_torch_batt+x),
+            slog(slognotice_c, "notify:torch_batt("<<x<<")")
+        )
+    }
+    notify_device_hotwrite(x) {
+        evalall(
+            write("spf", "notify.status", notify_status_device_hot+x),
+            slog(slognotice_c, "notify:device_hot("<<x<<")")
+        )
+    }
+
+    // Logworthies
+    logworthy_hot_write(x,p) {
+        evalall(
+            if (x==active_c,write("spf", "lw.hot", p)),
+            slog(slognotice_c, "logworthy:hot("<<x<<","<<p<<")")
+        )
+    }
+    logworthy_safety_write(x, p1, p2, p3) {
+        evalall(
+            if (x==active_c,write("spf", "lw.safety", p1)),
+            slog(slognotice_c, "logworthy:safety("<<x<<","<<p1<<","<<p2<<","<<p3<<")")
+        )
+    }
+}

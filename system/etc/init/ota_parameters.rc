@@ -1,0 +1,6 @@
+on property:ro.build.version.incremental=*
+    setprop ro.def.ota.ver ${ro.build.version.incremental}
+    setprop ro.def.ota.display_ver ${ro.build.version.incremental}
+
+on property:ro.prd_number=*
+    exec - root -- /system/bin/ota_parameters

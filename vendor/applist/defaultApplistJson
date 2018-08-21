@@ -1,0 +1,932 @@
+{
+  "fileINFO": [
+    1,
+    3
+  ],
+  "cID": [
+    {
+      "name": "Chameleon",
+      "package": [
+        {
+          "name": "com.amazon.avod.thirdpartyclient",
+          "state": "D"
+        },
+        {
+          "name": "com.amazon.kindle",
+          "state": "D"
+        },
+        {
+          "name": "com.amazon.mp3",
+          "state": "D"
+        },
+        {
+          "name": "com.amazon.mShop.android",
+          "state": "D"
+        },
+        {
+          "name": "com.audible.application",
+          "state": "D"
+        },
+        {
+          "name": "com.amazon.clouddrive.photos",
+          "state": "D"
+        },
+        {
+          "name": "com.sprint.psdg.sw",
+          "state": "D"
+        },
+        {
+          "name": "com.cequint.ecid",
+          "state": "D"
+        },
+        {
+          "name": "com.facebook.katana",
+          "state": "U"
+        },
+        {
+          "name": "com.facebook.appmanager",
+          "state": "U"
+        },
+        {
+          "name": "com.facebook.system",
+          "state": "U"
+        },
+        {
+          "name": "com.instagram.android",
+          "state": "U"
+        },
+        {
+          "name": "com.lookout",
+          "state": "U"
+        },
+        {
+          "name": "com.facebook.orca",
+          "state": "U"
+        },
+        {
+          "name": "com.sprint.w.installer",
+          "state": "D"
+        },
+        {
+          "name": "com.sprint.zone",
+          "state": "D"
+        },
+        {
+          "name": "com.locationlabs.sparkle.yellow.pre",
+          "state": "D"
+        },
+        {
+          "name": "com.coremobility.app.vnotes",
+          "state": "D"
+        }
+      ]
+    },
+    {
+      "name": "SPRINT",
+      "package": [
+        {
+          "name": "com.amazon.avod.thirdpartyclient",
+          "state": "E "
+        },
+        {
+          "name": "com.amazon.kindle",
+          "state": "E"
+        },
+        {
+          "name": "com.amazon.mp3",
+          "state": "E"
+        },
+        {
+          "name": "com.amazon.mShop.android",
+          "state": "E"
+        },
+        {
+          "name": "com.audible.application",
+          "state": "E"
+        },
+        {
+          "name": "com.amazon.clouddrive.photos",
+          "state": "E"
+        },
+        {
+          "name": "com.sprint.psdg.sw",
+          "state": "E"
+        },
+        {
+          "name": "com.cequint.ecid",
+          "state": "E"
+        },
+        {
+          "name": "com.facebook.katana",
+          "state": "E"
+        },
+        {
+          "name": "com.facebook.appmanager",
+          "state": "E"
+        },
+        {
+          "name": "com.facebook.system",
+          "state": "E"
+        },
+        {
+          "name": "com.instagram.android",
+          "state": "E"
+        },
+        {
+          "name": "com.lookout",
+          "state": "E"
+        },
+        {
+          "name": "com.facebook.orca",
+          "state": "E"
+        },
+        {
+          "name": "com.sprint.w.installer",
+          "state": "E"
+        },
+        {
+          "name": "com.sprint.zone",
+          "state": "E"
+        },
+        {
+          "name": "com.locationlabs.sparkle.yellow.pre",
+          "state": "E"
+        },
+        {
+          "name": "com.coremobility.app.vnotes",
+          "state": "E"
+        }
+      ]
+    },
+    {
+      "name": "BOOST",
+      "package": [
+        {
+          "name": "com.amazon.avod.thirdpartyclient",
+          "state": "E"
+        },
+        {
+          "name": "com.amazon.kindle",
+          "state": "E"
+        },
+        {
+          "name": "com.amazon.mp3",
+          "state": "E"
+        },
+        {
+          "name": "com.amazon.mShop.android",
+          "state": "E"
+        },
+        {
+          "name": "com.audible.application",
+          "state": "E"
+        },
+        {
+          "name": "com.amazon.clouddrive.photos",
+          "state": "E"
+        },
+        {
+          "name": "com.sprint.psdg.sw",
+          "state": "E"
+        },
+        {
+          "name": "com.cequint.ecid",
+          "state": "E"
+        },
+        {
+          "name": "com.facebook.katana",
+          "state": "E"
+        },
+        {
+          "name": "com.facebook.appmanager",
+          "state": "E"
+        },
+        {
+          "name": "com.facebook.system",
+          "state": "E"
+        },
+        {
+          "name": "com.instagram.android",
+          "state": "E"
+        },
+        {
+          "name": "com.lookout",
+          "state": "E"
+        },
+        {
+          "name": "com.facebook.orca",
+          "state": "E"
+        },
+        {
+          "name": "com.sprint.w.installer",
+          "state": "E"
+        },
+        {
+          "name": "com.sprint.zone",
+          "state": "E"
+        },
+        {
+          "name": "com.locationlabs.sparkle.yellow.pre",
+          "state": "D"
+        },
+        {
+          "name": "com.coremobility.app.vnotes",
+          "state": "E"
+        }
+      ]
+    },
+    {
+      "name": "VIRGIN",
+      "package": [
+        {
+          "name": "com.amazon.avod.thirdpartyclient",
+          "state": "E"
+        },
+        {
+          "name": "com.amazon.kindle",
+          "state": "E"
+        },
+        {
+          "name": "com.amazon.mp3",
+          "state": "E"
+        },
+        {
+          "name": "com.amazon.mShop.android",
+          "state": "E"
+        },
+        {
+          "name": "com.audible.application",
+          "state": "E"
+        },
+        {
+          "name": "com.amazon.clouddrive.photos",
+          "state": "E"
+        },
+        {
+          "name": "com.sprint.psdg.sw",
+          "state": "E"
+        },
+        {
+          "name": "com.cequint.ecid",
+          "state": "E"
+        },
+        {
+          "name": "com.facebook.katana",
+          "state": "E"
+        },
+        {
+          "name": "com.facebook.appmanager",
+          "state": "E"
+        },
+        {
+          "name": "com.facebook.system",
+          "state": "E"
+        },
+        {
+          "name": "com.instagram.android",
+          "state": "E"
+        },
+        {
+          "name": "com.lookout",
+          "state": "E"
+        },
+        {
+          "name": "com.facebook.orca",
+          "state": "E"
+        },
+        {
+          "name": "com.sprint.w.installer",
+          "state": "E"
+        },
+        {
+          "name": "com.sprint.zone",
+          "state": "E"
+        },
+        {
+          "name": "com.locationlabs.sparkle.yellow.pre",
+          "state": "D"
+        },
+        {
+          "name": "com.coremobility.app.vnotes",
+          "state": "E"
+        }
+      ]
+    },
+    {
+      "name": "SPRPRE",
+      "package": [
+        {
+          "name": "com.amazon.avod.thirdpartyclient",
+          "state": "E"
+        },
+        {
+          "name": "com.amazon.kindle",
+          "state": "E"
+        },
+        {
+          "name": "com.amazon.mp3",
+          "state": "E"
+        },
+        {
+          "name": "com.amazon.mShop.android",
+          "state": "E"
+        },
+        {
+          "name": "com.audible.application",
+          "state": "E"
+        },
+        {
+          "name": "com.amazon.clouddrive.photos",
+          "state": "E"
+        },
+        {
+          "name": "com.sprint.psdg.sw",
+          "state": "E"
+        },
+        {
+          "name": "com.cequint.ecid",
+          "state": "E"
+        },
+        {
+          "name": "com.facebook.katana",
+          "state": "E"
+        },
+        {
+          "name": "com.facebook.appmanager",
+          "state": "E"
+        },
+        {
+          "name": "com.facebook.system",
+          "state": "E"
+        },
+        {
+          "name": "com.instagram.android",
+          "state": "E"
+        },
+        {
+          "name": "com.lookout",
+          "state": "E"
+        },
+        {
+          "name": "com.facebook.orca",
+          "state": "E"
+        },
+        {
+          "name": "com.sprint.w.installer",
+          "state": "E"
+        },
+        {
+          "name": "com.sprint.zone",
+          "state": "E"
+        },
+        {
+          "name": "com.locationlabs.sparkle.yellow.pre",
+          "state": "D"
+        },
+        {
+          "name": "com.coremobility.app.vnotes",
+          "state": "E"
+        }
+      ]
+    },
+    {
+      "name": "311230",
+      "package": [
+        {
+          "name": "com.amazon.avod.thirdpartyclient",
+          "state": "U"
+        },
+        {
+          "name": "com.amazon.kindle",
+          "state": "U"
+        },
+        {
+          "name": "com.amazon.mp3",
+          "state": "U"
+        },
+        {
+          "name": "com.amazon.mShop.android",
+          "state": "U"
+        },
+        {
+          "name": "com.audible.application",
+          "state": "U"
+        },
+        {
+          "name": "com.amazon.clouddrive.photos",
+          "state": "U"
+        },
+        {
+          "name": "com.sprint.psdg.sw",
+          "state": "D"
+        },
+        {
+          "name": "com.cequint.ecid",
+          "state": "D"
+        },
+        {
+          "name": "com.facebook.katana",
+          "state": "U"
+        },
+        {
+          "name": "com.facebook.appmanager",
+          "state": "U"
+        },
+        {
+          "name": "com.facebook.system",
+          "state": "U"
+        },
+        {
+          "name": "com.instagram.android",
+          "state": "U"
+        },
+        {
+          "name": "com.lookout",
+          "state": "U"
+        },
+        {
+          "name": "com.facebook.orca",
+          "state": "U"
+        },
+        {
+          "name": "com.sprint.w.installer",
+          "state": "D"
+        },
+        {
+          "name": "com.sprint.zone",
+          "state": "D"
+        },
+        {
+          "name": "com.locationlabs.sparkle.yellow.pre",
+          "state": "D"
+        },
+        {
+          "name": "com.coremobility.app.vnotes",
+          "state": "D"
+        }
+      ]
+    },
+    {
+      "name": "310470",
+      "package": [
+        {
+          "name": "com.amazon.avod.thirdpartyclient",
+          "state": "U"
+        },
+        {
+          "name": "com.amazon.kindle",
+          "state": "U"
+        },
+        {
+          "name": "com.amazon.mp3",
+          "state": "U"
+        },
+        {
+          "name": "com.amazon.mShop.android",
+          "state": "U"
+        },
+        {
+          "name": "com.audible.application",
+          "state": "U"
+        },
+        {
+          "name": "com.amazon.clouddrive.photos",
+          "state": "U"
+        },
+        {
+          "name": "com.sprint.psdg.sw",
+          "state": "D"
+        },
+        {
+          "name": "com.cequint.ecid",
+          "state": "D"
+        },
+        {
+          "name": "com.facebook.katana",
+          "state": "U"
+        },
+        {
+          "name": "com.facebook.appmanager",
+          "state": "U"
+        },
+        {
+          "name": "com.facebook.system",
+          "state": "U"
+        },
+        {
+          "name": "com.instagram.android",
+          "state": "U"
+        },
+        {
+          "name": "com.lookout",
+          "state": "U"
+        },
+        {
+          "name": "com.facebook.orca",
+          "state": "U"
+        },
+        {
+          "name": "com.sprint.w.installer",
+          "state": "D"
+        },
+        {
+          "name": "com.sprint.zone",
+          "state": "D"
+        },
+        {
+          "name": "com.locationlabs.sparkle.yellow.pre",
+          "state": "D"
+        },
+        {
+          "name": "com.coremobility.app.vnotes",
+          "state": "D"
+        }
+      ]
+    },
+    {
+      "name": "312420",
+      "package": [
+        {
+          "name": "com.amazon.avod.thirdpartyclient",
+          "state": "U"
+        },
+        {
+          "name": "com.amazon.kindle",
+          "state": "U"
+        },
+        {
+          "name": "com.amazon.mp3",
+          "state": "U"
+        },
+        {
+          "name": "com.amazon.mShop.android",
+          "state": "U"
+        },
+        {
+          "name": "com.audible.application",
+          "state": "U"
+        },
+        {
+          "name": "com.amazon.clouddrive.photos",
+          "state": "U"
+        },
+        {
+          "name": "com.sprint.psdg.sw",
+          "state": "D"
+        },
+        {
+          "name": "com.cequint.ecid",
+          "state": "D"
+        },
+        {
+          "name": "com.facebook.katana",
+          "state": "U"
+        },
+        {
+          "name": "com.facebook.appmanager",
+          "state": "U"
+        },
+        {
+          "name": "com.facebook.system",
+          "state": "U"
+        },
+        {
+          "name": "com.instagram.android",
+          "state": "U"
+        },
+        {
+          "name": "com.lookout",
+          "state": "U"
+        },
+        {
+          "name": "com.facebook.orca",
+          "state": "U"
+        },
+        {
+          "name": "com.sprint.w.installer",
+          "state": "D"
+        },
+        {
+          "name": "com.sprint.zone",
+          "state": "D"
+        },
+        {
+          "name": "com.locationlabs.sparkle.yellow.pre",
+          "state": "D"
+        },
+        {
+          "name": "com.coremobility.app.vnotes",
+          "state": "D"
+        }
+      ]
+    },
+    {
+      "name": "312720",
+      "package": [
+        {
+          "name": "com.amazon.avod.thirdpartyclient",
+          "state": "U"
+        },
+        {
+          "name": "com.amazon.kindle",
+          "state": "U"
+        },
+        {
+          "name": "com.amazon.mp3",
+          "state": "U"
+        },
+        {
+          "name": "com.amazon.mShop.android",
+          "state": "U"
+        },
+        {
+          "name": "com.audible.application",
+          "state": "U"
+        },
+        {
+          "name": "com.amazon.clouddrive.photos",
+          "state": "U"
+        },
+        {
+          "name": "com.sprint.psdg.sw",
+          "state": "D"
+        },
+        {
+          "name": "com.cequint.ecid",
+          "state": "D"
+        },
+        {
+          "name": "com.facebook.katana",
+          "state": "U"
+        },
+        {
+          "name": "com.facebook.appmanager",
+          "state": "U"
+        },
+        {
+          "name": "com.facebook.system",
+          "state": "U"
+        },
+        {
+          "name": "com.instagram.android",
+          "state": "U"
+        },
+        {
+          "name": "com.lookout",
+          "state": "U"
+        },
+        {
+          "name": "com.facebook.orca",
+          "state": "U"
+        },
+        {
+          "name": "com.sprint.w.installer",
+          "state": "D"
+        },
+        {
+          "name": "com.sprint.zone",
+          "state": "D"
+        },
+        {
+          "name": "com.locationlabs.sparkle.yellow.pre",
+          "state": "D"
+        },
+        {
+          "name": "com.coremobility.app.vnotes",
+          "state": "D"
+        }
+      ]
+    },
+    {
+      "name": "310130",
+      "package": [
+        {
+          "name": "com.amazon.avod.thirdpartyclient",
+          "state": "U"
+        },
+        {
+          "name": "com.amazon.kindle",
+          "state": "U"
+        },
+        {
+          "name": "com.amazon.mp3",
+          "state": "U"
+        },
+        {
+          "name": "com.amazon.mShop.android",
+          "state": "U"
+        },
+        {
+          "name": "com.audible.application",
+          "state": "U"
+        },
+        {
+          "name": "com.amazon.clouddrive.photos",
+          "state": "U"
+        },
+        {
+          "name": "com.sprint.psdg.sw",
+          "state": "D"
+        },
+        {
+          "name": "com.cequint.ecid",
+          "state": "D"
+        },
+        {
+          "name": "com.facebook.katana",
+          "state": "U"
+        },
+        {
+          "name": "com.facebook.appmanager",
+          "state": "U"
+        },
+        {
+          "name": "com.facebook.system",
+          "state": "U"
+        },
+        {
+          "name": "com.instagram.android",
+          "state": "U"
+        },
+        {
+          "name": "com.lookout",
+          "state": "U"
+        },
+        {
+          "name": "com.facebook.orca",
+          "state": "U"
+        },
+        {
+          "name": "com.sprint.w.installer",
+          "state": "D"
+        },
+        {
+          "name": "com.sprint.zone",
+          "state": "D"
+        },
+        {
+          "name": "com.locationlabs.sparkle.yellow.pre",
+          "state": "D"
+        },
+        {
+          "name": "com.coremobility.app.vnotes",
+          "state": "D"
+        }
+      ]
+    },
+    {
+      "name": "312570",
+      "package": [
+        {
+          "name": "com.amazon.avod.thirdpartyclient",
+          "state": "U"
+        },
+        {
+          "name": "com.amazon.kindle",
+          "state": "U"
+        },
+        {
+          "name": "com.amazon.mp3",
+          "state": "U"
+        },
+        {
+          "name": "com.amazon.mShop.android",
+          "state": "U"
+        },
+        {
+          "name": "com.audible.application",
+          "state": "U"
+        },
+        {
+          "name": "com.amazon.clouddrive.photos",
+          "state": "U"
+        },
+        {
+          "name": "com.sprint.psdg.sw",
+          "state": "D"
+        },
+        {
+          "name": "com.cequint.ecid",
+          "state": "D"
+        },
+        {
+          "name": "com.facebook.katana",
+          "state": "U"
+        },
+        {
+          "name": "com.facebook.appmanager",
+          "state": "U"
+        },
+        {
+          "name": "com.facebook.system",
+          "state": "U"
+        },
+        {
+          "name": "com.instagram.android",
+          "state": "U"
+        },
+        {
+          "name": "com.lookout",
+          "state": "U"
+        },
+        {
+          "name": "com.facebook.orca",
+          "state": "U"
+        },
+        {
+          "name": "com.sprint.w.installer",
+          "state": "D"
+        },
+        {
+          "name": "com.sprint.zone",
+          "state": "D"
+        },
+        {
+          "name": "com.locationlabs.sparkle.yellow.pre",
+          "state": "D"
+        },
+        {
+          "name": "com.coremobility.app.vnotes",
+          "state": "D"
+        }
+      ]
+    },
+    {
+      "name": "Wholesale",
+      "package": [
+        {
+          "name": "com.amazon.avod.thirdpartyclient",
+          "state": "U"
+        },
+        {
+          "name": "com.amazon.kindle",
+          "state": "U"
+        },
+        {
+          "name": "com.amazon.mp3",
+          "state": "U"
+        },
+        {
+          "name": "com.amazon.mShop.android",
+          "state": "U"
+        },
+        {
+          "name": "com.audible.application",
+          "state": "U"
+        },
+        {
+          "name": "com.amazon.clouddrive.photos",
+          "state": "U"
+        },
+        {
+          "name": "com.sprint.psdg.sw",
+          "state": "E"
+        },
+        {
+          "name": "com.cequint.ecid",
+          "state": "D"
+        },
+        {
+          "name": "com.facebook.katana",
+          "state": "U"
+        },
+        {
+          "name": "com.facebook.appmanager",
+          "state": "U"
+        },
+        {
+          "name": "com.facebook.system",
+          "state": "U"
+        },
+        {
+          "name": "com.instagram.android",
+          "state": "U"
+        },
+        {
+          "name": "com.lookout",
+          "state": "U"
+        },
+        {
+          "name": "com.facebook.orca",
+          "state": "U"
+        },
+        {
+          "name": "com.sprint.w.installer",
+          "state": "E"
+        },
+        {
+          "name": "com.sprint.zone",
+          "state": "D"
+        },
+        {
+          "name": "com.locationlabs.sparkle.yellow.pre",
+          "state": "D"
+        },
+        {
+          "name": "com.coremobility.app.vnotes",
+          "state": "E"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+service sml_perso /vendor/bin/sml_perso
+    user root
+    group root
+    oneshot
+    disabled
+
+on property:vendor.cellular.ril.sim_state=PERSO_LOCKED
+   start dcmd
+
+on property:ro.ecid=*
+    start sml_perso

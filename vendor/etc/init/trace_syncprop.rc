@@ -1,0 +1,6 @@
+on fs
+    mkdir /oempersist/data 0711 root root
+    mkdir /oempersist/data/param 0711 root root
+    write /oempersist/data/param/macaddr "00:00:00:00:00:00"
+    chmod 0644 /oempersist/data/param/macaddr
+    exec - root root -- /vendor/bin/trace_syncprop

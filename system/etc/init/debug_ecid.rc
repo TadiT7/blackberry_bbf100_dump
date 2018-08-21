@@ -1,0 +1,3 @@
+on property:debug.ecid=*
+    mkdir /bbpersist/mfg 0755 root root
+    exec - root root -- /system/bin/debug_ecid ${debug.ecid}

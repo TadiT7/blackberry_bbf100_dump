@@ -1,0 +1,9 @@
+// sdm660
+import::"android_common.spf"
+
+test::slog(slognotice_c, "spf sw rev " << @swrev)
+
+import::"bbe100_physical.spf"
+import::"bbe100_power.spf"
+import::"bbe100_control.spf"
+import::"bbe100_log.spf"

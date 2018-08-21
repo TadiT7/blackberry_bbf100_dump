@@ -1,0 +1,25 @@
+on post-fs-data
+    # device configuration
+    mkdir /data/config  0775 dcmd java_swoop
+    mkdir /data/config/downloads 0775 dcmd java_swoop
+    chown dcmd java_swoop /data/config/config.db
+    chmod 0664 /data/config/config.db
+    chown dcmd java_swoop /data/config/ConflictData.json
+    chmod 0664 /data/config/ConflictData.json
+
+
+# device configuration service
+service dcmd /system/bin/dcmd start
+   class main
+   user dcmd
+   group dcmd swoop_radio java_swoop
+   seclabel u:r:dcmd:s0
+   disabled
+   oneshot
+on property:vendor.cellular.ril.sim_state=READY
+   start dcmd
+on property:vendor.cellular.ril.sim_state=ABSENT
+   start dcmd
+
+on property:vendor.dcm.trigger=START
+   start dcmd

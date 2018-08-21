@@ -1,0 +1,95 @@
+# Mercury AFE loopback tests
+# Valid for Mercury and MTP (internal codec) devices
+# Source: ftm_test_config_mtp
+#
+# 53: Primary (bottom) mic --> Speaker (top)
+# 54: Secondary (top) mic --> speaker (bottom)
+# 55: Primary (bottom) mic --> receiver (top)
+# 56: Secondary (top) mic --> receiver (bottom)
+# 57: Headset mic --> receiver (top)
+# 58: Headset mic --> speaker (bottom)
+# 59: Primary (bottom) mic --> headset speaker
+# 60: Secondary (top) mic --> headset speaker
+# 61: Headset mic --> receiver (top)
+# 62: Headset mic --> speaker (bottom)
+# 63: Headset mic --> headset speaker
+# 64: Headset mic --> HAC
+
+# Primary (bottom) mic --> receiver (top)
+tc 55
+!AfeLoop
+Txdevice:11
+Rxdevice:5
+
+enable
+DEC1 MUX:ADC1
+DEC1 Volume:67
+ADC1_INP1 Switch:1
+INT0_MI2S_RX Port Mixer INT3_MI2S_TX:1
+INT0_MI2S_RX_DL_HL Switch:1
+RX1 MIX1 INP1:RX1
+RDAC2 MUX:RX1
+EAR_S:Switch
+EAR PA Boost:ENABLE
+
+disable
+DEC1 MUX:ZERO
+DEC1 Volume:84
+ADC1_INP1 Switch:0
+INT0_MI2S_RX Port Mixer INT3_MI2S_TX:0
+INT0_MI2S_RX_DL_HL Switch:0
+RX1 MIX1 INP1:ZERO
+RDAC2 MUX:ZERO
+EAR_S:ZERO
+
+# Secondary (top) mic --> speaker (bottom)
+tc 54
+!AfeLoop
+Txdevice:11
+Rxdevice:0
+
+enable
+ADC2 MUX:INP3
+DEC1 MUX:ADC2
+DEC1 Volume:67
+MultiMedia1 Mixer INT3_MI2S_TX:1
+TERT_MI2S_RX Audio Mixer MultiMedia1:1
+TERT_MI2S_RX Port Mixer INT3_MI2S_TX:1
+nxp Profile:bypass
+
+disable
+ADC2 MUX:ZERO
+DEC1 MUX:ZERO
+DEC1 Volume:84
+MultiMedia1 Mixer INT3_MI2S_TX:0
+TERT_MI2S_RX Audio Mixer MultiMedia1:0
+TERT_MI2S_RX Port Mixer INT3_MI2S_TX:0
+nxp Profile:music
+
+# Headset mic --> headset speaker
+tc 63
+!AfeLoop
+Txdevice:11
+Rxdevice:0
+
+enable
+ADC2 MUX:INP2
+DEC1 MUX:ADC2
+DEC1 Volume:67
+MultiMedia1 Mixer INT3_MI2S_TX:1
+SEC_MI2S_RX Audio Mixer MultiMedia1:1
+SEC_MI2S_RX Port Mixer INT3_MI2S_TX:1
+AK4376 PDN Control:on
+HPH SRC:AKM
+
+disable
+ADC2 MUX:ZERO
+DEC1 MUX:ZERO
+DEC1 Volume:84
+MultiMedia1 Mixer INT3_MI2S_TX:0
+SEC_MI2S_RX Audio Mixer MultiMedia1:0
+SEC_MI2S_RX Port Mixer INT3_MI2S_TX:0
+AK4376 PDN Control:off
+HPH SRC:SDM 
+
+

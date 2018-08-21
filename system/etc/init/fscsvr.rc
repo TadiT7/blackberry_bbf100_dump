@@ -1,0 +1,11 @@
+service fscsvr /system/bin/fscsvr
+    class main stp
+#    seclabel u:r:fscsvr:s0
+    user system
+    group system drmrpc sdcard_rw
+
+on property:ro.serialno=*
+    setprop ro.fscsvr ${ro.serialno}
+
+on post-fs-data
+    mkdir /data/fscsvr 0770 system shell

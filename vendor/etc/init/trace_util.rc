@@ -1,0 +1,5 @@
+#on post-fs
+#    exec u:r:trace_util:s0 root root -- /vendor/bin/trace_util --sync-prop
+
+#on property:vold.decrypt=trigger_restart_framework && property:ro.ecid=544
+#    exec u:r:trace_util:s0 root root -- /vendor/bin/trace_util --sync-qcnv

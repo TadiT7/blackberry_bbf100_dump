@@ -1,0 +1,1065 @@
+// sdm660
+test::slog(slognotice_c, "sdm660_control version: 2018/06/28 14:05")
+
+
+/* Virtual sensors */
+vlist:: {
+    // thermal
+    // Estimates the glass surface hot spot temperature
+    virt_glass: export=@ro {
+        0.004952 * qc_tsens0 + 0.071774 * qc_tsens1 - 0.034228 * qc_tsens2 + 0.113838 * qc_tsens3 - 0.023867 * qc_tsens4 + 0.084962 * qc_tsens5 + 0.092727 * qc_tsens6 - 0.349434 * qc_tsens7 - 0.094236 * qc_tsens8 + 0.026301 * qc_tsens9 + 0.274827 * qc_tsens10 - 0.337929 * qc_tsens11 + 0.150477 * qc_tsens12 - 0.173678 * qc_tsens13 + 0.722413 * qc_batt + 0.586546 * th_emmc + 0.133852 * th_pa - 0.237978 * qc_pmic - 0.176641 * th_msm + 0.373468 * th_ref - 0.147125 * xo_therm - 1.595629;
+        th_ref - 5; // quiet_therm
+        qc_batt;
+        65 C // UL glass temperature limit
+    }
+
+    // Estimates the metal surface hot spot temperature
+    virt_metal: export=@ro {
+        - 0.071110 * qc_tsens0 - 0.089169 * qc_tsens1 + 0.059876 * qc_tsens2 + 0.059922 * qc_tsens3 + 0.034832 * qc_tsens4 + 0.060975 * qc_tsens5 + 0.077115 * qc_tsens6 - 0.249063 * qc_tsens7 - 0.106836 * qc_tsens8 - 0.370685 * qc_tsens9 + 0.348965 * qc_tsens10 - 0.183054 * qc_tsens11 + 0.084438 * qc_tsens12 + 0.436143 * qc_tsens13 + 0.673006 * qc_batt + 0.320335 * th_emmc + 0.154814 * th_pa - 0.313222 * qc_pmic - 0.101629 * th_msm - 0.032694 * th_ref + 0.301832 * xo_therm - 4.286211;
+        th_ref - 5; // quiet_therm
+        qc_batt;
+        55 C // UL metal temperature limit
+    }
+
+    // Estimates the plastic surface hot spot temperature
+    virt_plastic: export=@ro {
+        0.101436 * qc_tsens0 - 0.059452 * qc_tsens1 + 0.476200 * qc_tsens2 - 0.023558 * qc_tsens3 + 0.003648 * qc_tsens4 - 0.072465 * qc_tsens5 + 0.053376 * qc_tsens6 - 0.065282 * qc_tsens7 + 0.355843 * qc_tsens8 - 0.551402 * qc_tsens9 - 0.791854 * qc_tsens10 - 0.338384 * qc_tsens11 - 0.119195 * qc_tsens12 + 0.796450 * qc_tsens13 + 0.844022 * qc_batt + 0.403641 * th_emmc + 0.331556 * th_pa - 0.601597 * qc_pmic + 0.055607 * th_msm + 0.098998 * th_ref + 0.334316 * xo_therm - 4.977986;
+        th_ref - 5; // quiet_therm
+        qc_batt;
+        75 C // UL plastic temperature limit
+    }
+
+    // Estimates the ambient temperature
+    virt_ambient: export=@ro {
+        th_ref;
+        21 C // if the ambient temperature cannot be calculated, assume it to be room temperature
+    }
+
+    // Estimates the average battery temperature
+    virt_battery: export=@ro {
+        qc_batt
+        // if the battery temperature cannot be calculated, return a fault.  This will trigger a system shutdown.
+    }
+
+    // Measures the internal hot spot temperature of the gold cores
+    virt_cpu_c1: export=@ro {
+        max( qc_tsens3event, qc_tsens4event, qc_tsens5event, qc_tsens6event );
+        max( qc_tsens3, qc_tsens4, qc_tsens5, qc_tsens6, qc_tsens7, qc_tsens12 );
+        60 C
+    }
+    virt_cpu_c1_logger {
+        max( qc_tsens3, qc_tsens4, qc_tsens5, qc_tsens6, qc_tsens7, qc_tsens12 )
+    }
+
+    // Measures the internal hot spot temperature of the silver cores
+    virt_cpu_c0: export=@ro {
+        qc_tsens1event;
+        max( qc_tsens1, qc_tsens2 );
+        60 C
+    }
+    virt_cpu_c0_logger {
+        max( qc_tsens1, qc_tsens2 )
+    }
+
+    // Measures the gpu internal hot spot temperature
+    virt_gpu: export=@ro {
+        qc_tsens8event;
+        25 C; // temporary
+        95 C
+    }
+    virt_gpu_logger {
+        qc_tsens8
+    }
+
+    // Measures the hottest MSM internal temperature
+    virt_msm: export=@ro {
+        max( qc_tsens1event, qc_tsens2, qc_tsens3event, qc_tsens4event, qc_tsens5event, qc_tsens6event, qc_tsens7, qc_tsens8event, qc_tsens12 );
+        25 C; // temporary
+        60 C
+    }
+
+    virt_msm_logger {
+        max( qc_tsens1, qc_tsens2, qc_tsens3, qc_tsens4, qc_tsens5, qc_tsens6, qc_tsens7, qc_tsens8, qc_tsens12 )
+    }
+
+    // Mearsures the coollest MSM internal temperature
+    virt_vdd: export=@ro {
+        min( qc_tsens0, qc_tsens1, qc_tsens2, qc_tsens3, qc_tsens4, qc_tsens5event, qc_tsens6, qc_tsens7, qc_tsens8, qc_tsens9, qc_tsens10, qc_tsens11, qc_tsens12, qc_tsens13 );
+        25 C; // never trigger vdd restriction
+        10 C
+    }
+
+    // Measures the pmic internal temperature
+    virt_pmic: export=@ro {
+        qc_pmic;
+        25 C; // temporary
+        60 C
+    }
+
+    // low voltage protection
+    // Measure the battery voltage
+    virt_vbat: export=@ro {
+        v_bat;
+        4200 mA
+    }
+
+    // Measure the battery state-of-charge
+    virt_soc: export=@ro {
+        soc;
+        100%
+    }
+
+    // Calculate the maximum current that can be drawn from the battery without the battery voltage dropping below the shutdown threshold
+    virt_imax: export=@ro {
+        ( ocv - 3.0V ) * 1000 / (esr);
+        10.0 A
+    }
+}
+
+vlist:: {
+    // idle
+    uc_idle: export=@ro {
+        //if(max(th_rf, th_pmi8994_wlc, th_wlan, th_ref, th_wtr, th_msm, th_pm8994, th_pmi8994_msm) - min(th_rf, th_pmi8994_wlc, th_wlan, th_ref, th_wtr, th_msm, th_pm8994, th_pmi8994_msm) < 3, @true);
+        @false
+    }
+
+    // GPU intensive gaming in a landscape orientation
+    uc_landscape_gaming: export=@ro {
+        // landscape mode, high gpu usage, and the heat source is the msm
+        //if( (max( qc_tsens11, qc_tsens12 ) - qc_tsens4 > 0) && (qc_tsens11 > 55 C) && ((display_rotation == landscape_lt_c) || (display_rotation == landscape_rt_c)), @true);
+        @false
+    }
+
+    // Device used for navigation
+    uc_navigation: export=@ro {
+        //if( gps_active && screen && usb_charging && (max(expand(orientation_buffer)) - min(expand(orientation_buffer)) != 0) && !headset, @true); // FIXME: improve estimate
+        @false
+    }
+
+    // Device connected to a display
+    uc_display: export=@ro {
+        hdmi_plugged;
+        @false
+    }
+}
+
+/* Frequency steps
+# cluster0
+633600 902400 1113600 1401600 1536000 1747200 1843200
+# cluster1
+1113600 1401600 1747200 1958400 2150400 2208000
+# gpu
+647000000 588000000 465000000 370000000 266000000 160000000
+*/
+
+/* Mitigation votes */
+//votes, one entry per controller
+vlist:: {
+    // cpu frequency for cluster 0, cores 0-3
+    cpuvote_cluster0 {
+        1843.2MHz;
+        1843.2MHz;
+        1843.2MHz;
+        1843.2MHz;
+        1843.2MHz;
+        1843.2MHz;
+        1843.2MHz;
+        1843.2MHz;
+        1843.2MHz;
+        1843.2MHz;
+        1843.2MHz;
+        1843.2MHz;
+        1843.2MHz;
+        1843.2MHz;
+        1843.2MHz;
+        1843.2MHz
+    }
+    cpu_cluster0minvote: initval = 1843.2MHz, export=@ro {
+        min(expand(cpuvote_cluster0))
+    }
+
+    // cpu frequency for cluster 1, cores 4-7
+    cpuvote_cluster1 {
+        2208.0MHz;
+        2208.0MHz;
+        2208.0MHz;
+        2208.0MHz;
+        2208.0MHz;
+        2208.0MHz;
+        2208.0MHz;
+        2208.0MHz;
+        2208.0MHz;
+        2208.0MHz;
+        2208.0MHz;
+        2208.0MHz;
+        2208.0MHz;
+        2208.0MHz;
+        2208.0MHz;
+        2208.0MHz
+    }
+    cpu_cluster1minvote: initval = 2208.0MHz, export=@ro {
+        min(expand(cpuvote_cluster1))
+    }
+
+
+    // number of silver cores online
+    cluster0vote {
+        4;
+        4;
+        4;
+        4;
+        4;
+        4;
+        4;
+        4;
+        4;
+        4;
+        4;
+        4;
+        4;
+        4;
+        4;
+        4
+    }
+    cluster0minvote: initval = 4, export=@ro {
+        min(expand(cluster0vote))
+    }
+
+    // number of gold cores online
+    cluster1vote {
+        4;
+        4;
+        4;
+        4;
+        4;
+        4;
+        4;
+        4;
+        4;
+        4;
+        4;
+        4;
+        4;
+        4;
+        4;
+        4
+    }
+    cluster1minvote: initval = 4, export=@ro {
+        min(expand(cluster1vote))
+    }
+
+    // gpu frequency
+    gpuvote {
+        647.0MHz;
+        647.0MHz;
+        647.0MHz;
+        647.0MHz;
+        647.0MHz;
+        647.0MHz;
+        647.0MHz;
+        647.0MHz;
+        647.0MHz;
+        647.0MHz;
+        647.0MHz;
+        647.0MHz;
+        647.0MHz;
+        647.0MHz;
+        647.0MHz;
+        647.0MHz
+    }
+    gpuminvote: initval = 650MHz, export=@ro {
+        min(expand(gpuvote))
+    }
+
+    // backlight brightness
+    backlightvote {
+        100%;
+        100%;
+        100%;
+        100%;
+        100%;
+        100%;
+        100%;
+        100%;
+        100%;
+        100%;
+        100%;
+        100%;
+        100%;
+        100%;
+        100%;
+        100%
+    }
+    backlightminvote: initval = 100%, export=@ro {
+        min(expand(backlightvote))
+    }
+
+    // usb input current
+    usbvote {
+        3000mA;
+        3000mA;
+        3000mA;
+        3000mA;
+        3000mA;
+        3000mA;
+        3000mA;
+        3000mA;
+        3000mA;
+        3000mA;
+        3000mA;
+        3000mA;
+        3000mA;
+        3000mA;
+        3000mA;
+        3000mA
+    }
+    usbminvote: initval = 3000mA, export=@ro {
+        min(expand(usbvote))
+    }
+
+    // vdd restriction when tempereture low
+    vdd_restrictionvote {
+        vdd_restriction_disable_c;
+        vdd_restriction_disable_c;
+        vdd_restriction_disable_c;
+        vdd_restriction_disable_c;
+        vdd_restriction_disable_c;
+        vdd_restriction_disable_c;
+        vdd_restriction_disable_c;
+        vdd_restriction_disable_c;
+        vdd_restriction_disable_c;
+        vdd_restriction_disable_c;
+        vdd_restriction_disable_c;
+        vdd_restriction_disable_c;
+        vdd_restriction_disable_c;
+        vdd_restriction_disable_c;
+        vdd_restriction_disable_c;
+        vdd_restriction_disable_c
+    }
+    vdd_restrictionmaxvote: initval = vdd_restriction_disable_c, export=@ro {
+        max(expand(vdd_restrictionvote))
+    }
+
+    // camera flash current
+    flashvote {
+        2000mA;
+        2000mA;
+        2000mA;
+        2000mA;
+        2000mA;
+        2000mA;
+        2000mA;
+        2000mA;
+        2000mA;
+        2000mA;
+        2000mA;
+        2000mA;
+        2000mA;
+        2000mA;
+        2000mA;
+        2000mA
+    }
+    flashminvote: initval = 2000mA, export=@ro {
+        min(expand(flashvote))
+    }
+
+    // camera torch
+    torchvote {
+        torch_enabled_c;
+        torch_enabled_c;
+        torch_enabled_c;
+        torch_enabled_c;
+        torch_enabled_c;
+        torch_enabled_c;
+        torch_enabled_c;
+        torch_enabled_c;
+        torch_enabled_c;
+        torch_enabled_c;
+        torch_enabled_c;
+        torch_enabled_c;
+        torch_enabled_c;
+        torch_enabled_c;
+        torch_enabled_c;
+        torch_enabled_c
+    }
+    torchminvote: initval = torch_enabled_c, export=@ro {
+        max(expand(torchvote))
+    }
+
+    // camera mitigation
+    cameravote {
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c
+    }
+    cameraminvote: initval = nominal_c, export=@ro {
+        max(expand(cameravote))
+    }
+
+    // wlan mitigation
+    wlanvote {
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c
+    }
+    wlanminvote: initval = nominal_c, export=@ro {
+        max(expand(wlanvote))
+    }
+
+    // radio mitigation
+    radiovote {
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c
+    }
+    radiominvote: initval = nominal_c, export=@ro {
+        max(expand(radiovote))
+    }
+
+    // gsm pa mitigation
+    gsm_pavote {
+        33dBm;
+        33dBm;
+        33dBm;
+        33dBm;
+        33dBm;
+        33dBm;
+        33dBm;
+        33dBm;
+        33dBm;
+        33dBm;
+        33dBm;
+        33dBm;
+        33dBm;
+        33dBm;
+        33dBm;
+        33dBm
+    }
+    gsm_paminvote: initval = 33dBm, export=@ro {
+        min(expand(gsm_pavote))
+    }
+
+    // cellular data disabled due to thermal notification
+    notify_data_thermvote {
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c
+    }
+    notify_data_thermminvote: initval = nominal_c, export=@ro {
+        max(expand(notify_data_thermvote))
+    }
+
+    // e911 mode due to thermal notification
+    notify_e911_thermvote {
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c
+    }
+    notify_e911_thermminvote: initval = nominal_c, export=@ro {
+        max(expand(notify_e911_thermvote))
+    }
+
+    // wlan disabled due to thermal notification
+    notify_wlan_thermvote {
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c
+    }
+    notify_wlan_thermminvote: initval = nominal_c, export=@ro {
+        max(expand(notify_wlan_thermvote))
+    }
+
+    // camera disabled due to thermal notification
+    notify_camera_thermvote {
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c
+    }
+    notify_camera_thermminvote: initval = nominal_c, export=@ro {
+        max(expand(notify_camera_thermvote))
+    }
+
+    // torch disabled due to thermal notification
+    notify_torch_thermvote {
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c
+    }
+    notify_torch_thermminvote: initval = nominal_c, export=@ro {
+        max(expand(notify_torch_thermvote))
+    }
+
+    // torch disabled due to battery notification
+    notify_torch_battvote {
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c
+    }
+    notify_torch_battminvote: initval = nominal_c, export=@ro {
+        max(expand(notify_torch_battvote))
+    }
+
+    // device hot notification
+    notify_device_hotvote {
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c
+    }
+    notify_device_hotminvote: initval = nominal_c, export=@ro {
+        max(expand(notify_device_hotvote))
+    }
+
+    // device hot logworthy
+    logworthy_hotvote {
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c
+    }
+    logworthy_hotminvote: initval = nominal_c, export=@ro {
+        max(expand(logworthy_hotvote))
+    }
+
+    // safety logworthy
+    logworthy_safetyvote {
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c;
+        nominal_c
+    }
+    logworthy_safetyminvote: initval = nominal_c, export=@ro {
+        max(expand(logworthy_safetyvote))
+    }
+}
+
+/* Mitigation actions */
+vlist:: {
+    cpu_cluster0(x, y) {
+        //x is the controller number
+        //y the value
+        evalall(set(cpuvote_cluster0[x],y), if(lasteval(cpu_cluster0minvote) != cpu_cluster0minvote, cpuwrite_cluster0(cpu_cluster0minvote)))
+    }
+
+    cpu_cluster1(x, y) {
+        //x is the controller number
+        //y the value
+        evalall(set(cpuvote_cluster1[x],y), if(lasteval(cpu_cluster1minvote) != cpu_cluster1minvote, cpuwrite_cluster1(cpu_cluster1minvote)))
+    }
+
+    cluster0(x, y) {
+        //x is the controller number
+        //y the value
+        evalall(set(cluster0vote[x],y), if(lasteval(cluster0minvote) != cluster0minvote, clusterwrite(0,cluster0minvote)))
+    }
+
+    cluster1(x, y) {
+        //x is the controller number
+        //y the value
+        evalall(set(cluster1vote[x],y), if(lasteval(cluster1minvote) != cluster1minvote, clusterwrite(1,cluster1minvote)))
+    }
+
+    gpu(x, y) {
+        //x is the controller number
+        //y the value
+        evalall(set(gpuvote[x],y), if(lasteval(gpuminvote) != gpuminvote, gpuwrite(gpuminvote)))
+    }
+
+    backlight(x, y) {
+        //x is the controller number
+        //y the value
+        evalall(set(backlightvote[x],y), if(lasteval(backlightminvote) != backlightminvote, backlightwrite(backlightminvote)))
+    }
+
+    usb(x, y) {
+        //x is the controller number
+        //y the value
+        evalall(set(usbvote[x],y), if(lasteval(usbminvote) != usbminvote, usbwrite(usbminvote)))
+    }
+
+    vdd_rstr(x, y) {
+        //x is the controller number
+        //y the value
+        evalall(set(vdd_restrictionvote[x],y), if(vdd_state != vdd_restrictionmaxvote, vddrestrictionwrite(vdd_restrictionmaxvote)))
+    }
+
+    flash(x, y) {
+        //x is the controller number
+        //y the value
+        evalall(set(flashvote[x],y), if(lasteval(flashminvote) != flashminvote, flashwrite(flashminvote)))
+    }
+
+    torch(x, y) {
+        //x is the controller number
+        //y the value
+        evalall(set(torchvote[x],y), if(lasteval(torchminvote) != torchminvote, torchwrite(torchminvote)))
+    }
+
+    camera(x, y) {
+        //x is the controller number
+        //y the value
+        evalall(set(cameravote[x],y), if(lasteval(cameraminvote) != cameraminvote, camerawrite(cameraminvote)))
+    }
+
+    wlan(x, y) {
+        //x is the controller number
+        //y the value
+        evalall(set(wlanvote[x],y), if(lasteval(wlanminvote) != wlanminvote, wlanwrite(wlanminvote)))
+    }
+
+    radio(x, y) {
+        //x is the controller number
+        //y the value
+        evalall(set(radiovote[x],y), if(lasteval(radiominvote) != radiominvote, radiowrite(radiominvote)))
+    }
+
+    gsm_pa(x, y) {
+        //x is the controller number
+        //y the value
+        evalall(set(gsm_pavote[x],y), if(lasteval(gsm_paminvote) != gsm_paminvote, gsm_pawrite(gsm_paminvote)))
+    }
+
+    notify_data_therm(x, y) {
+        //x is the controller number
+        //y the value
+        evalall(set(notify_data_thermvote[x],y), if(lasteval(notify_data_thermminvote) != notify_data_thermminvote, notify_data_thermwrite(notify_data_thermminvote)))
+    }
+    notify_e911_therm(x, y) {
+        //x is the controller number
+        //y the value
+        evalall(set(notify_e911_thermvote[x],y), if(lasteval(notify_e911_thermminvote) != notify_e911_thermminvote, notify_e911_thermwrite(notify_e911_thermminvote)))
+    }
+    notify_wlan_therm(x, y) {
+        //x is the controller number
+        //y the value
+        evalall(set(notify_wlan_thermvote[x],y), if(lasteval(notify_wlan_thermminvote) != notify_wlan_thermminvote, notify_wlan_thermwrite(notify_wlan_thermminvote)))
+    }
+    notify_camera_therm(x, y) {
+        //x is the controller number
+        //y the value
+        evalall(set(notify_camera_thermvote[x],y), if(lasteval(notify_camera_thermminvote) != notify_camera_thermminvote, notify_camera_thermwrite(notify_camera_thermminvote)))
+    }
+
+    notify_torch_therm(x, y) {
+        //x is the controller number
+        //y the value
+        evalall(set(notify_torch_thermvote[x],y), if(lasteval(notify_torch_thermminvote) != notify_torch_thermminvote, notify_torch_thermwrite(notify_torch_thermminvote)))
+    }
+
+    notify_torch_batt(x, y) {
+        //x is the controller number
+        //y the value
+        evalall(set(notify_torch_battvote[x],y), if(lasteval(notify_torch_battminvote) != notify_torch_battminvote, notify_torch_battwrite(notify_torch_battminvote)))
+    }
+
+    notify_device_hot(x, y) {
+        //x is the controller number
+        //y the value
+        evalall(set(notify_device_hotvote[x],y), if(lasteval(notify_device_hotminvote) != notify_device_hotminvote, notify_device_hotwrite(notify_device_hotminvote)))
+    }
+
+    logworthy_hot(x, y, z) {
+        //x is the controller number
+        //y the value
+        //z the parameter to send
+        evalall(set(logworthy_hotvote[x],y), if(lasteval(logworthy_hotminvote) != logworthy_hotminvote, logworthy_hot_write(logworthy_hotminvote, z)))
+    }
+
+    logworthy_safety(x, y, z1, z2, z3) {
+        //x is the controller number
+        //y the value
+        //z# the parameters to send
+        evalall(set(logworthy_safetyvote[x],y), if(lasteval(logworthy_safetyminvote) != logworthy_safetyminvote, logworthy_safety_write(logworthy_safetyminvote, z1, z2, z3)))
+    }
+}
+
+/* Controller variables */
+vlist:: {
+    pmicSetPoint {
+        75 C
+    }
+
+    pmicSetPointOffset {
+        0 C
+    }
+
+    msmSetPoint {
+        95 C
+    }
+
+    msmSetPointOffset {
+        0 C
+    }
+
+    sysfuseSampling {
+        60s
+    }
+
+    comfort_offset {
+        0 C + 2*uc_landscape_gaming// - 3*virt_uc_in_pocket + 4*virt_uc_idle_charging + 0*virt_uc_in_hand + if(virt_ambient > 35,3,0)
+    }
+}
+
+/* Controllers */
+control:: {
+    // thermal
+    ul_safety_controller: virsensor=max(virt_metal + 20C, virt_glass + 10C,  virt_plastic),
+                    sampling=60s,
+                    hysteresis=0,
+                    kp=1,
+                    undoall=evalall(radio(@cid,  nominal_c), wlan(@cid,       nominal_c), torch(@cid,  torch_enabled_c), camera(@cid,     nominal_c), cluster0(@cid,4), cluster1(@cid,4), gpu(@cid, 647.0MHz), notify_torch_therm(@cid,nominal_c), notify_camera_therm(@cid,nominal_c), notify_data_therm(@cid,nominal_c), notify_e911_therm(@cid,nominal_c), notify_wlan_therm(@cid,nominal_c), logworthy_safety(@cid,nominal_c, virt_glass, virt_plastic, 0)) {
+     <> sampling=15s <>    65.0C -> radio(@cid,  nominal_c), wlan(@cid,       nominal_c), torch(@cid,  torch_enabled_c), camera(@cid,     nominal_c), cluster0(@cid,4), cluster1(@cid,4), gpu(@cid, 588.0MHz), notify_torch_therm(@cid,nominal_c), notify_camera_therm(@cid,nominal_c), notify_data_therm(@cid,nominal_c), notify_e911_therm(@cid,nominal_c), notify_wlan_therm(@cid,nominal_c);
+     <> sampling=10s <>    72.0C -> radio(@cid, data_off_c), wlan(@cid,       nominal_c), torch(@cid, torch_disabled_c), camera(@cid, reduce_fps1_c), cluster0(@cid,3), cluster1(@cid,2), gpu(@cid, 465.0MHz), notify_torch_therm(@cid, active_c), notify_camera_therm(@cid,nominal_c), notify_data_therm(@cid, active_c),                                    notify_wlan_therm(@cid,nominal_c), logworthy_safety(@cid, active_c, virt_glass, virt_plastic, 0);
+     <> sampling=5s  <>    73.0C -> radio(@cid,     e911_c), wlan(@cid,       nominal_c), torch(@cid, torch_disabled_c), camera(@cid, reduce_fps1_c), cluster0(@cid,2), cluster1(@cid,2), gpu(@cid, 370.0MHz), notify_torch_therm(@cid, active_c), notify_camera_therm(@cid,nominal_c), notify_data_therm(@cid,nominal_c), notify_e911_therm(@cid, active_c), notify_wlan_therm(@cid,nominal_c), logworthy_safety(@cid, active_c, virt_glass, virt_plastic, 0);
+     <> sampling=5s  <>    74.0C -> radio(@cid,     e911_c), wlan(@cid, wlan_disabled_c), torch(@cid, torch_disabled_c), camera(@cid, reduce_fps1_c), cluster0(@cid,2), cluster1(@cid,2), gpu(@cid, 266.0MHz), notify_torch_therm(@cid, active_c), notify_camera_therm(@cid,nominal_c), notify_data_therm(@cid,nominal_c), notify_e911_therm(@cid, active_c), notify_wlan_therm(@cid, active_c), logworthy_safety(@cid, active_c, virt_glass, virt_plastic, 0);
+     <> sampling=5s  <>    75.0C -> radio(@cid,     e911_c), wlan(@cid, wlan_disabled_c), torch(@cid, torch_disabled_c), camera(@cid,   cameraoff_c), cluster0(@cid,2), cluster1(@cid,2), gpu(@cid, 266.0MHz), notify_torch_therm(@cid, active_c), notify_camera_therm(@cid, active_c), notify_data_therm(@cid,nominal_c), notify_e911_therm(@cid, active_c), notify_wlan_therm(@cid, active_c), logworthy_safety(@cid, active_c, virt_glass, virt_plastic, 0)
+    }
+
+    surface_comfort_controller: virsensor=max(virt_glass, virt_plastic, th_ref-5C),
+                    sampling=if(max(virt_glass, virt_plastic)>37C, 30s, 60s),
+                    hysteresis=2,
+                    setpoint=comfort_offset,
+                    kp=1,
+                    undoall=evalall(set(msmSetPoint, 95), set(pmicSetPoint, 75), usb(@cid, 3000mA), backlight(@cid, 100%), cpu_cluster0(@cid, 1843.2MHz), cpu_cluster1(@cid, 2208.0MHz), cluster0(@cid,4), cluster1(@cid,4), gpu(@cid, 647.0MHz), radio(@cid,         nominal_c), notify_device_hot(@cid,nominal_c), notify_camera_therm(@cid,nominal_c), logworthy_hot(@cid,nominal_c, virt_plastic)) {
+                           40.0C -> set(msmSetPoint, 89), set(pmicSetPoint, 71), usb(@cid, 2500mA), backlight(@cid, 100%), cpu_cluster0(@cid, 1747.2MHz), cpu_cluster1(@cid, 2150.4MHz), cluster0(@cid,4), cluster1(@cid,3), gpu(@cid, 588.0MHz), radio(@cid,         nominal_c), notify_device_hot(@cid,nominal_c), notify_camera_therm(@cid,nominal_c), logworthy_hot(@cid,nominal_c, virt_plastic);
+                           42.0C -> set(msmSetPoint, 84), set(pmicSetPoint, 67), usb(@cid, 2000mA), backlight(@cid, 100%), cpu_cluster0(@cid, 1536.0MHz), cpu_cluster1(@cid, 1958.4MHz), cluster0(@cid,3), cluster1(@cid,2), gpu(@cid, 465.0MHz), radio(@cid,         nominal_c), notify_device_hot(@cid,nominal_c), notify_camera_therm(@cid,nominal_c), logworthy_hot(@cid,nominal_c, virt_plastic);
+                           44.0C -> set(msmSetPoint, 79), set(pmicSetPoint, 63), usb(@cid, 1500mA), backlight(@cid, 100%), cpu_cluster0(@cid, 1401.6MHz), cpu_cluster1(@cid, 1747.2MHz), cluster0(@cid,3), cluster1(@cid,2), gpu(@cid, 370.0MHz), radio(@cid,         nominal_c), notify_device_hot(@cid,nominal_c), notify_camera_therm(@cid,nominal_c), logworthy_hot(@cid,nominal_c, virt_plastic);
+                           46.0C -> set(msmSetPoint, 74), set(pmicSetPoint, 59), usb(@cid, 1000mA), backlight(@cid,  70%), cpu_cluster0(@cid, 1113.6MHz), cpu_cluster1(@cid, 1401.6MHz), cluster0(@cid,3), cluster1(@cid,2), gpu(@cid, 370.0MHz), radio(@cid,         nominal_c), notify_device_hot(@cid,nominal_c), notify_camera_therm(@cid,nominal_c), logworthy_hot(@cid,nominal_c, virt_plastic);
+                           48.0C -> set(msmSetPoint, 70), set(pmicSetPoint, 55), usb(@cid,  500mA), backlight(@cid,  60%), cpu_cluster0(@cid, 902.4MHz),  cpu_cluster1(@cid, 1113.6MHz), cluster0(@cid,3), cluster1(@cid,1), gpu(@cid, 266.0MHz), radio(@cid,         nominal_c), notify_camera_therm(@cid,nominal_c);
+     <> sampling=15s <>    50.0C -> set(msmSetPoint, 70), set(pmicSetPoint, 51), usb(@cid,  500mA), backlight(@cid,  50%), cpu_cluster0(@cid, 902.4MHz),  cpu_cluster1(@cid, 1113.6MHz), cluster0(@cid,3), cluster1(@cid,0), gpu(@cid, 266.0MHz), radio(@cid, reduce_data_rate_c), notify_camera_therm(@cid,nominal_c);
+     <> sampling=15s <>    52.0C -> set(msmSetPoint, 70), set(pmicSetPoint, 47), usb(@cid,    0mA), backlight(@cid,  50%), cpu_cluster0(@cid, 902.4MHz),  cpu_cluster1(@cid, 1113.6MHz), cluster0(@cid,3), cluster1(@cid,0), gpu(@cid, 266.0MHz), radio(@cid, reduce_data_rate_c), notify_device_hot(@cid, active_c), notify_camera_therm(@cid, active_c), logworthy_hot(@cid, active_c, virt_plastic)
+    }
+
+    battery_protection: virsensor=virt_battery,
+                    sampling=60s,
+                    maxerrcount=10,
+                    infault=evalall( slog(slogcritical_c, "Battery safety shutdown, cannot read battery temperature"), deviceoff()),
+                    undoall=evalall(cluster0(@cid,4), cluster1(@cid,4), backlight(@cid, 100%), torch(@cid,  torch_enabled_c), camera(@cid,   nominal_c), notify_torch_therm(@cid,nominal_c), notify_camera_therm(@cid,nominal_c)) {
+     <> sampling=15s   <>  77.0C -> cluster0(@cid,2), cluster1(@cid,2), backlight(@cid,  50%), torch(@cid, torch_disabled_c), camera(@cid, cameraoff_c), notify_torch_therm(@cid, active_c), notify_camera_therm(@cid, active_c);
+     <> sampling=15s   <>  80.0C -> slog(slogcritical_c, "Battery safety shutdown, temperature = " << virt_battery), deviceoff()
+    }
+
+    pmic_controller: virsensor=virt_pmic,
+                    sampling=60s,
+                    hysteresis=0,
+                    setpoint= sma(pmicSetPoint + pmicSetPointOffset,6,pmicSetPoint + pmicSetPointOffset),
+                    kp=1, ki=1/480, kb=1/480, satlow=-3, sathigh=17, windupback,
+                    undoall=        usb(@cid, 3000mA) {
+     <> sampling=10s       <>  0 -> usb(@cid, 2500mA);
+     <> sampling=10s       <>  2 -> usb(@cid, 2000mA);
+     <> sampling=10s       <>  4 -> usb(@cid, 1500mA);
+     <> sampling=10s       <>  7 -> usb(@cid, 1000mA);
+     <> sampling=10s       <> 15 -> usb(@cid,  500mA)
+    }
+
+    /*
+     * The gpu_controller is designed to keep the GPU from exceeding the msmSetPoint.  Unlike the cpu
+     * controllers that have a ktm safety net, the gpu controllers maximum setpoint is limited to 90 C
+     * The controller will not take an action that makes the device unusable (GPU frequency < 320.0 MHz).
+     */
+    gpu_controller: virsensor=virt_gpu,
+                    sampling=if(virt_gpu>85C, 3s, 60s),
+                    hysteresis=0,
+                    setpoint= min(sma(msmSetPoint + msmSetPointOffset,6,msmSetPoint + msmSetPointOffset),90C),
+                    kp=1, ki=1/1200, kb=1/1200, satlow=-3, sathigh=17, windupback,
+                    undoall=        gpu(@cid, 647.0MHz) { // Turbo
+     <> sampling=5s     <>   0.0 -> gpu(@cid, 588.0MHz);  // Nominal+
+     <> sampling=5s     <>   1.0 -> gpu(@cid, 465.0MHz);  // Nominal
+     <> sampling=4s     <>   3.0 -> gpu(@cid, 370.0MHz);  // SVS+
+     <> sampling=2s     <>   5.0 -> gpu(@cid, 266.0MHz);  // SVS
+     <> sampling=2s     <>  15.0 -> gpu(@cid, 266.0MHz)   // SVS
+    }
+
+    cpu_big_controller: virsensor=virt_cpu_c1,
+                    sampling=if(virt_cpu_c1>80C, 4s, 60s),
+                    hysteresis=0,
+                    setpoint= sma(msmSetPoint + msmSetPointOffset,3,msmSetPoint + msmSetPointOffset),
+                    kp=1, ki=1/960, kb=1/960, satlow=-3, sathigh=22, windupback,
+                    undoall=evalall(cpu_cluster1(@cid, 2208.0MHz), cluster1(@cid,4)) { // Turbo
+     <> sampling=3s        <>  0 -> cpu_cluster1(@cid, 2150.4MHz), cluster1(@cid,3);   // Turbo
+     <> sampling=2s        <>  3 -> cpu_cluster1(@cid, 1958.4MHz), cluster1(@cid,3);   // Nominal+
+     <> sampling=2s        <>  6 -> cpu_cluster1(@cid, 1747.2MHz), cluster1(@cid,2);   // Nominal+
+     <> sampling=2s        <>  8 -> cpu_cluster1(@cid, 1401.6MHz), cluster1(@cid,2);   // Nominal
+     <> sampling=2s        <> 10 -> cpu_cluster1(@cid, 1113.6MHz), cluster1(@cid,1);   // Nominal
+     <> sampling=2s        <> 20 -> cpu_cluster1(@cid, 1113.6MHz), cluster1(@cid,1)    // SVS+
+    }
+
+    cpu_little_controller: virsensor=virt_cpu_c0,
+                    sampling=if(virt_cpu_c0>80C, 5s, 60s),
+                    hysteresis=0,
+                    setpoint= sma(msmSetPoint + msmSetPointOffset,3,msmSetPoint + msmSetPointOffset),
+                    kp=1, ki=1/960, kb=1/960, satlow=-3, sathigh=22, windupback,
+                    undoall=evalall(cpu_cluster0(@cid, 1843.2MHz), cluster0(@cid,4)) { // Turbo
+     <> sampling=5s      <>  0.0 -> cpu_cluster0(@cid, 1747.2MHz), cluster0(@cid,3);   // Turbo
+     <> sampling=5s      <>  3.5 -> cpu_cluster0(@cid, 1536.0MHz), cluster0(@cid,3);   // Nominal+
+     <> sampling=5s      <>  7.4 -> cpu_cluster0(@cid, 1401.6MHz), cluster0(@cid,3);   // Nominal
+     <> sampling=2s      <>  9.6 -> cpu_cluster0(@cid,  902.4MHz), cluster0(@cid,2);   // Nominal
+     <> sampling=2s      <> 20.0 -> cpu_cluster0(@cid,  633.6MHz), cluster0(@cid,2)    // SVS+
+    }
+
+    // modify thermal mitigation at low battery levels
+    soc_thermal_controller: virsensor=virt_soc,
+                    sampling=60s,
+                    hysteresis=2,
+                    trigger=usb_charging,
+                    post=   evalall(set(pmicSetPointOffset,  0C), set(msmSetPointOffset,   0C)), // nominal
+                    undoall=evalall(set(pmicSetPointOffset,  0C), set(msmSetPointOffset,   0C)) {// nominal
+     <> low               <>   5 -> set(pmicSetPointOffset, 10C), set(msmSetPointOffset, -10C);  // < 5%
+     <> low               <>  10 -> set(pmicSetPointOffset,  6C), set(msmSetPointOffset,  -6C);  // 5% to 10%
+     <> low               <>  15 -> set(pmicSetPointOffset,  3C), set(msmSetPointOffset,  -3C)   // 10% to 15%
+    }
+
+    // safety net in case cpu and gpu controllers cannot keep the MSM8992 temperature below 108 C
+    msm_protection: virsensor=virt_msm,
+                    sampling=if(virt_msm>90C, 5s, 60s),
+                    undoall=evalall(cpu_cluster0(@cid, 1843.2MHz), cpu_cluster1(@cid, 2208.0MHz), cluster0(@cid,4), cluster1(@cid,4), gpu(@cid, 647.0MHz)) {
+     <> sampling=1s    <> 105.0C -> cpu_cluster0(@cid,  902.4MHz), cpu_cluster1(@cid, 1113.6MHz), cluster0(@cid,3), cluster1(@cid,2), gpu(@cid, 465.0MHz);
+     <> sampling=1s    <> 110.0C -> cpu_cluster0(@cid,  633.6MHz), cpu_cluster1(@cid, 1113.6MHz), cluster0(@cid,2), cluster1(@cid,1), gpu(@cid, 266.0MHz);
+     <> sampling=1s    <> 115.0C -> slog(slogcritical_c, "CPU safety shutdown, temperature = " << virt_msm), deviceoff()
+    }
+
+    // low voltage protection
+    slump_protection_imax: virsensor=virt_imax,
+                    sampling=60s,
+                    hysteresis=100mA,
+                    trigger= (virt_imax < 3100mA),
+                    undoall=evalall(flash(@cid,2000mA), torch(@cid,  torch_enabled_c), gsm_pa(@cid, 33dBm), backlight(@cid, 100%), cpu_cluster0(@cid, 1843.2MHz), cpu_cluster1(@cid, 2208.0MHz), cluster0(@cid,4), cluster1(@cid,4), gpu(@cid, 647.0MHz), notify_torch_batt(@cid,nominal_c)) {
+     <> low            <> 1000mA -> flash(@cid,   0mA), torch(@cid, torch_disabled_c), gsm_pa(@cid, 29dBm), backlight(@cid,  50%), cpu_cluster0(@cid,  902.4MHz), cpu_cluster1(@cid, 1113.6MHz), cluster0(@cid,2), cluster1(@cid,2), gpu(@cid, 370.0MHz), notify_torch_batt(@cid, active_c);
+     <> low            <> 1100mA -> flash(@cid, 100mA), torch(@cid,  torch_enabled_c), gsm_pa(@cid, 29dBm), backlight(@cid,  60%), cpu_cluster0(@cid,  902.4MHz), cpu_cluster1(@cid, 1113.6MHz), cluster0(@cid,2), cluster1(@cid,2), gpu(@cid, 370.0MHz), notify_torch_batt(@cid,nominal_c);
+     <> low            <> 1200mA -> flash(@cid, 200mA), torch(@cid,  torch_enabled_c), gsm_pa(@cid, 29dBm), backlight(@cid,  65%), cpu_cluster0(@cid,  902.4MHz), cpu_cluster1(@cid, 1113.6MHz), cluster0(@cid,2), cluster1(@cid,2), gpu(@cid, 370.0MHz), notify_torch_batt(@cid,nominal_c);
+     <> low            <> 1300mA -> flash(@cid, 400mA), torch(@cid,  torch_enabled_c), gsm_pa(@cid, 29dBm), backlight(@cid,  70%), cpu_cluster0(@cid,  902.4MHz), cpu_cluster1(@cid, 1113.6MHz), cluster0(@cid,3), cluster1(@cid,3), gpu(@cid, 370.0MHz), notify_torch_batt(@cid,nominal_c);
+     <> low            <> 1400mA -> flash(@cid, 400mA), torch(@cid,  torch_enabled_c), gsm_pa(@cid, 29dBm), backlight(@cid,  75%), cpu_cluster0(@cid, 1113.6MHz), cpu_cluster1(@cid, 1401.6MHz), cluster0(@cid,3), cluster1(@cid,3), gpu(@cid, 370.0MHz), notify_torch_batt(@cid,nominal_c);
+     <> low            <> 1500mA -> flash(@cid, 550mA), torch(@cid,  torch_enabled_c), gsm_pa(@cid, 29dBm), backlight(@cid,  80%), cpu_cluster0(@cid, 1113.6MHz), cpu_cluster1(@cid, 1401.6MHz), cluster0(@cid,3), cluster1(@cid,3), gpu(@cid, 465.0MHz), notify_torch_batt(@cid,nominal_c);
+     <> low            <> 1600mA -> flash(@cid, 700mA), torch(@cid,  torch_enabled_c), gsm_pa(@cid, 29dBm), backlight(@cid,  85%), cpu_cluster0(@cid, 1401.6MHz), cpu_cluster1(@cid, 1747.2MHz), cluster0(@cid,3), cluster1(@cid,3), gpu(@cid, 465.0MHz), notify_torch_batt(@cid,nominal_c);
+     <> low            <> 1700mA -> flash(@cid, 700mA), torch(@cid,  torch_enabled_c), gsm_pa(@cid, 29dBm), backlight(@cid,  90%), cpu_cluster0(@cid, 1401.6MHz), cpu_cluster1(@cid, 1747.2MHz), cluster0(@cid,3), cluster1(@cid,3), gpu(@cid, 465.0MHz), notify_torch_batt(@cid,nominal_c);
+     <> low            <> 1850mA -> flash(@cid, 850mA), torch(@cid,  torch_enabled_c), gsm_pa(@cid, 30dBm), backlight(@cid, 100%), cpu_cluster0(@cid, 1536.0MHz), cpu_cluster1(@cid, 1958.4MHz), cluster0(@cid,3), cluster1(@cid,3), gpu(@cid, 465.0MHz), notify_torch_batt(@cid,nominal_c);
+     <> low            <> 2000mA -> flash(@cid,1000mA), torch(@cid,  torch_enabled_c), gsm_pa(@cid, 30dBm), backlight(@cid, 100%), cpu_cluster0(@cid, 1536.0MHz), cpu_cluster1(@cid, 1958.4MHz), cluster0(@cid,3), cluster1(@cid,3), gpu(@cid, 588.0MHz), notify_torch_batt(@cid,nominal_c);
+     <> low            <> 2100mA -> flash(@cid,1200mA), torch(@cid,  torch_enabled_c), gsm_pa(@cid, 30dBm), backlight(@cid, 100%), cpu_cluster0(@cid, 1747.2MHz), cpu_cluster1(@cid, 2150.4MHz), cluster0(@cid,3), cluster1(@cid,3), gpu(@cid, 588.0MHz), notify_torch_batt(@cid,nominal_c);
+     <> low            <> 2400mA -> flash(@cid,1200mA), torch(@cid,  torch_enabled_c), gsm_pa(@cid, 33dBm), backlight(@cid, 100%), cpu_cluster0(@cid, 1747.2MHz), cpu_cluster1(@cid, 2150.4MHz), cluster0(@cid,3), cluster1(@cid,3), gpu(@cid, 588.0MHz), notify_torch_batt(@cid,nominal_c);
+     <> low            <> 2600mA -> flash(@cid,1400mA), torch(@cid,  torch_enabled_c), gsm_pa(@cid, 33dBm), backlight(@cid, 100%), cpu_cluster0(@cid, 1843.2MHz), cpu_cluster1(@cid, 2208.0MHz), cluster0(@cid,3), cluster1(@cid,3), gpu(@cid, 647.0MHz), notify_torch_batt(@cid,nominal_c);
+     <> low            <> 2800mA -> flash(@cid,1600mA), torch(@cid,  torch_enabled_c), gsm_pa(@cid, 33dBm), backlight(@cid, 100%), cpu_cluster0(@cid, 1843.2MHz), cpu_cluster1(@cid, 2208.0MHz), cluster0(@cid,3), cluster1(@cid,3), gpu(@cid, 647.0MHz), notify_torch_batt(@cid,nominal_c);
+     <> low            <> 3000mA -> flash(@cid,1800mA), torch(@cid,  torch_enabled_c), gsm_pa(@cid, 33dBm), backlight(@cid, 100%), cpu_cluster0(@cid, 1843.2MHz), cpu_cluster1(@cid, 2208.0MHz), cluster0(@cid,3), cluster1(@cid,3), gpu(@cid, 647.0MHz), notify_torch_batt(@cid,nominal_c)
+    }
+
+    slump_protection_vbat: virsensor=min(virt_vbat, ocv),
+                    sampling=60s,
+                    hysteresis=40mV,
+                    trigger= (min(virt_vbat, ocv) < 3800mV),
+                    undoall=evalall(flash(@cid,2000mA), torch(@cid,  torch_enabled_c), notify_torch_batt(@cid,nominal_c)) {
+     <> low            <> 3240mV -> flash(@cid,   0mA), torch(@cid, torch_disabled_c), notify_torch_batt(@cid, active_c); // 3.24
+     <> low            <> 3330mV -> flash(@cid, 100mA), torch(@cid,  torch_enabled_c), notify_torch_batt(@cid,nominal_c); // 3.32
+     <> low            <> 3360mV -> flash(@cid, 200mA), torch(@cid,  torch_enabled_c), notify_torch_batt(@cid,nominal_c); // 3.34
+     <> low            <> 3400mV -> flash(@cid, 400mA), torch(@cid,  torch_enabled_c), notify_torch_batt(@cid,nominal_c); // 3.36
+     <> low            <> 3435mV -> flash(@cid, 550mA), torch(@cid,  torch_enabled_c), notify_torch_batt(@cid,nominal_c); // 3.38
+     <> low            <> 3470mV -> flash(@cid, 700mA), torch(@cid,  torch_enabled_c), notify_torch_batt(@cid,nominal_c); // 3.40
+     <> low            <> 3505mV -> flash(@cid, 850mA), torch(@cid,  torch_enabled_c), notify_torch_batt(@cid,nominal_c); // 3.42
+     <> low            <> 3540mV -> flash(@cid,1000mA), torch(@cid,  torch_enabled_c), notify_torch_batt(@cid,nominal_c); // 3.44
+     <> low            <> 3580mV -> flash(@cid,1200mA), torch(@cid,  torch_enabled_c), notify_torch_batt(@cid,nominal_c); // 3.46
+     <> low            <> 3620mV -> flash(@cid,1400mA), torch(@cid,  torch_enabled_c), notify_torch_batt(@cid,nominal_c); // 3.48
+     <> low            <> 3660mV -> flash(@cid,1600mA), torch(@cid,  torch_enabled_c), notify_torch_batt(@cid,nominal_c); // 3.50
+     <> low            <> 3700mV -> flash(@cid,1800mA), torch(@cid,  torch_enabled_c), notify_torch_batt(@cid,nominal_c)  // 3.52
+    }
+
+    // State based controllers
+    /* Asynchronous controller that will mitigate when the screen is turned off */
+    screen_based_controller: virsensor=virt_glass,
+                    sampling=60s,
+                    hysteresis=0,
+                    trigger=!screen_event,
+                    post=   evalall(cluster0(@cid,4), cluster1(@cid,4)), // nominal
+                    undoall=evalall(cluster0(@cid,4), cluster1(@cid,4)) {// nominal
+                           30.0C -> cluster0(@cid,3), cluster1(@cid,3); // screen off and temperature between 30 and 35 C
+                           35.0C -> cluster0(@cid,2), cluster1(@cid,2)  // screen off and temperature >= 35 C
+    }
+
+    // battery saver mode
+    battery_saver_controller: virsensor=virt_soc,
+                    sampling=60s,
+                    hysteresis=2,
+                    trigger=battery_saver_event,
+                    post=   evalall(cluster0(@cid,4), cluster1(@cid,4), cpu_cluster0(@cid, 1843.2MHz), cpu_cluster1(@cid,  2208.0MHz), gpu(@cid, 647.0MHz)) {// nominal
+     <> low               <>   5 -> cluster0(@cid,2), cluster1(@cid,2), cpu_cluster0(@cid, 1113.6MHz), cpu_cluster1(@cid, 1401.6MHz), gpu(@cid, 588.0MHz);  // < 5%
+     <> low               <>  15 -> cluster0(@cid,3), cluster1(@cid,2), cpu_cluster0(@cid, 1536.0MHz), cpu_cluster1(@cid, 1958.4MHz), gpu(@cid, 647.0MHz);  // 5% to 15 %
+     <> low               <> 100 -> cluster0(@cid,3), cluster1(@cid,3), cpu_cluster0(@cid, 1536.0MHz), cpu_cluster1(@cid, 1958.4MHz), gpu(@cid, 647.0MHz)   // > 15%
+    }
+
+    //vdd restriction mode
+    vdd_restriction_controller: virsensor=virt_vdd,
+                    sampling=30s,
+                    hysteresis=0,
+                    trigger=vdd_state,
+                    undoall=vdd_rstr(@cid,vdd_restriction_disable_c) {// nominal
+                           10.0C -> vdd_rstr(@cid,vdd_restriction_disable_c),slog(slogcritical_c, "VDD restriction disabled")  // > 10C
+    }
+
+    // app based mitigation
+    app_based_controller: virsensor=app_mitigation_event,
+                    sampling=60s,
+                    trigger=(virt_glass > app_mitigation_temperature),
+                    post=   evalall(cluster0(@cid,4), cluster1(@cid,4), cpu_cluster0(@cid, 1843.2MHz), cpu_cluster1(@cid,  2208.0MHz), gpu(@cid, 647.0MHz)),// temperature below threshold, don't mitigate
+                    undoall=evalall(cluster0(@cid,4), cluster1(@cid,4), cpu_cluster0(@cid, 1843.2MHz), cpu_cluster1(@cid,  2208.0MHz), gpu(@cid, 647.0MHz)) { // unknown mitigation, don't mitigate
+     <> exact             <>   0 -> cluster0(@cid,4), cluster1(@cid,4), cpu_cluster0(@cid, 1843.2MHz), cpu_cluster1(@cid,  2208.0MHz), gpu(@cid, 647.0MHz); // 8
+     <> exact             <>   1 -> cluster0(@cid,3), cluster1(@cid,3), cpu_cluster0(@cid, 1843.2MHz), cpu_cluster1(@cid,  2208.0MHz), gpu(@cid, 647.0MHz); // 6
+     <> exact             <>   2 -> cluster0(@cid,2), cluster1(@cid,2), cpu_cluster0(@cid, 1843.2MHz), cpu_cluster1(@cid,  2208.0MHz), gpu(@cid, 647.0MHz); // 4
+     <> exact             <>   4 -> cluster0(@cid,4), cluster1(@cid,4), cpu_cluster0(@cid, 1536.0MHz), cpu_cluster1(@cid, 1958.4MHz), gpu(@cid, 647.0MHz); // 8, nominal+ voltage
+     <> exact             <>   5 -> cluster0(@cid,3), cluster1(@cid,3), cpu_cluster0(@cid, 1536.0MHz), cpu_cluster1(@cid, 1958.4MHz), gpu(@cid, 647.0MHz); // 6, nominal+ voltage
+     <> exact             <>   6 -> cluster0(@cid,2), cluster1(@cid,2), cpu_cluster0(@cid, 1536.0MHz), cpu_cluster1(@cid, 1958.4MHz), gpu(@cid, 647.0MHz); // 4, nominal+ voltage
+     <> exact             <>   8 -> cluster0(@cid,4), cluster1(@cid,4), cpu_cluster0(@cid, 1401.6MHz), cpu_cluster1(@cid, 1747.2MHz), gpu(@cid, 588.0MHz); // 8, nominal voltage
+     <> exact             <>   9 -> cluster0(@cid,3), cluster1(@cid,3), cpu_cluster0(@cid, 1401.6MHz), cpu_cluster1(@cid, 1747.2MHz), gpu(@cid, 588.0MHz); // 6, nominal voltage
+     <> exact             <>  10 -> cluster0(@cid,2), cluster1(@cid,2), cpu_cluster0(@cid, 1401.6MHz), cpu_cluster1(@cid, 1747.2MHz), gpu(@cid, 588.0MHz); // 4, nominal voltage
+     <> exact             <>  12 -> cluster0(@cid,4), cluster1(@cid,4), cpu_cluster0(@cid, 1113.6MHz), cpu_cluster1(@cid, 1401.6MHz), gpu(@cid, 465.0MHz)  // 8, SVS+
+    }
+}

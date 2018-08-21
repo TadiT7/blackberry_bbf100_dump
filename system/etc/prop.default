@@ -1,0 +1,17 @@
+#
+# ADDITIONAL_DEFAULT_PROPERTIES
+#
+ro.boot.veritymode=enforcing
+ro.secure=1
+security.perf_harden=1
+ro.adb.secure=1
+ro.factorytest=0
+ro.boot.verity=active
+ro.allow.mock.location=0
+ro.debuggable=0
+#
+# BOOTIMAGE_BUILD_PROPERTIES
+#
+ro.bootimage.build.date=Thu Jul 26 14:45:22 EDT 2018
+ro.bootimage.build.date.utc=1532630722
+persist.sys.usb.config=none

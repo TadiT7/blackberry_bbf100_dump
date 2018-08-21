@@ -1,0 +1,18 @@
+on property:sys.boot_completed=1 && property:ro.product.device=bbf100
+     setprop persist.sys.sar.enabled 3
+
+on property:sys.boot_completed=1 && property:ro.product.device=bbe100
+     setprop persist.sys.sar.enabled 2
+
+on property:sys.boot_completed=1
+    setprop sys.rf.sar.status 1
+    exec - root shell -- /system/bin/sar_daemon 1
+
+on property:sys.rf.sar.status=1 && property:init.svc.hostapd=running
+    exec - root shell -- /system/bin/sar_daemon 2
+
+on property:sys.rf.sar.status=1 && property:init.svc.hostapd=stopped
+    exec - root shell -- /system/bin/sar_daemon 1
+
+on property:sys.rf.sar.status=0
+    exec - root shell -- /system/bin/sar_daemon 0

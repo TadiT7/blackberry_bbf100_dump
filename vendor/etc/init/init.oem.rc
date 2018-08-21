@@ -1,0 +1,218 @@
+import init.factory.${ro.boot.imagetype}.rc
+import /vendor/etc/init/init.target.usb.rc
+
+on early-init
+    mkdir /nvram         0775 root root
+    mount tmpfs tmpfs /nvram mode=0755,uid=0,gid=1000
+    mkdir /nvram/blog    0770 root root
+    mkdir /nvram/perm    0770 root root
+    mkdir /nvram/nvuser  0770 root root
+    mkdir /nvram/prdid   0770 root root
+    mkdir /nvram/boardid 0770 root root
+
+# START Reset cause related changes
+on post-fs
+    #Configure ownership/permissions of /sys and /dev devices where necessary
+    chown battlog root /proc/timer_stats
+    chmod 0660 /proc/timer_stats
+
+on post-fs-data
+    # Folder for reset_cause data storage
+    mkdir /data/reset_cause  0750 reset_cause reset_cause
+    # Folder for system ramdump storage
+    mkdir /data/sysrdump 0775 systemrdump systemrdump
+    # Folder for bootmetrics data storage
+    mkdir /data/system/metrics 0665 system system
+# END Reset cause related changes
+
+	#it only allow on process with vold label
+service vtnvfsd_blog  /vendor/bin/vtnvfsd -b /dev/block/bootdevice/by-name -s blog:/nvram/blog:rw
+    seclabel u:r:vtnvfsd:s0
+    class core
+    group mfg_client
+
+service vtnvfsd  /vendor/bin/vtnvfsd -g mfg_stp -b /dev/block/bootdevice/by-name -s boardid:/nvram/boardid:rwmfi  -s nvuser:/nvram/nvuser:rw -s perm:/nvram/perm:rw -s prdid:/nvram/prdid:rwmfi
+    class core
+    seclabel u:r:vtnvfsd:s0
+    group nvram drmrpc mfg_client
+
+on boot
+#start: BBRY_ANDROID, owner and group of led blink knob
+     chown system system /sys/class/leds/red/blink
+     chown system system /sys/class/leds/green/blink
+     chown system system /sys/class/leds/blue/blink
+#end: BBRY_ANDROID
+
+on charger
+#BBRY: Energy Management - poweroff-charging
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 633600
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 633600
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor powersave
+    write /sys/devices/system/cpu/cpu1/online 0
+    write /sys/devices/system/cpu/cpu2/online 0
+    write /sys/devices/system/cpu/cpu3/online 0
+    write /sys/devices/system/cpu/cpu4/online 0
+    write /sys/devices/system/cpu/cpu5/online 0
+    write /sys/devices/system/cpu/cpu6/online 0
+    write /sys/devices/system/cpu/cpu7/online 0
+#BBRY end
+
+# Bugreport is triggered by power key and selecting menu
+service bugreport /system/bin/bugreport_service
+    seclabel u:r:dumpstate:s0
+    user root
+    class main
+    disabled
+    oneshot
+
+# bbdevproxyd
+service bbdevproxyd /system/bin/bbdevproxyd
+   seclabel u:r:bbdevproxyd:s0
+   class core
+   user root
+   group bbauth nvram deviceid devicepwd drmrpc mfg_stp
+   socket bbdevproxy seqpacket 660 bbauth bbauth
+
+
+# mfg_utild
+service mfg_utild /system/bin/mfg_utild
+   seclabel u:r:mfg_utild:s0
+   class core
+   user root
+   group bbauth nvram deviceid devicepwd drmrpc mfg_stp
+   socket mfgutil seqpacket 660 bbauth bbauth
+
+
+# Set in bootloader - based on dbg_console token
+on property:ro.boot.console_en=1
+   start console
+
+# Diagnostics daemon
+service diagnosticsd /system/bin/diagnosticsd
+   seclabel u:r:diagnosticsd:s0
+   class main
+   user root
+   group root token_service_native_consumer
+# Property to disable the daemon for testing/automation. See ddt/ss/SystemUtils.java
+ on property:diag.enabled=0
+   stop diagnosticsd
+ on property:diag.enabled=1
+   start diagnosticsd
+
+# bbmfgd
+service bbmfgd /system/bin/bbmfgd
+   seclabel u:r:bbmfgd:s0
+   class core
+   user root
+   group bbauth nvram deviceid devicepwd drmrpc mfg_stp
+   disabled
+ on property:init.svc.bbdevproxyd=running
+# to start bbmfgd after bbdevproxyd socket ready
+   enable bbmfgd
+
+# Token service
+service token_service /system/bin/bb_tokenserviced
+    class core
+    seclabel u:r:token_service:s0
+    socket tokenservice stream 660 token_service token_service_native_consumer
+    user token_service
+    group token_service nvram token
+
+#for ims config file
+on post-fs
+    mkdir /bbpersist/cellular         0771 radio radio
+    mkdir /bbpersist/cellular/swoop   0770 radio swoop_radio
+
+service ipblacklist /system/bin/sh /system/etc/iptables-blacklist.sh
+    # run the ipblacklist to block the reporting sites
+    seclabel u:r:ipblacklist:s0
+    user root
+    group root
+    oneshot
+    disabled
+
+# system ramdump service to enable/disable ramdump feature
+# based on system property setting
+service sys_ramdump_svc /system/bin/sys_ramdump -m
+    seclabel u:r:systemrdumpsvc:s0
+    class main
+    user root
+    group systemrdump nvram token_service_native_consumer
+    disabled
+    oneshot
+on property:ctrl.ramdump.enabled=1
+    start sys_ramdump_svc
+on property:ctrl.ramdump.enabled=0
+    stop sys_ramdump_svc
+
+# reset-cause service
+service reset_cause /system/bin/reset_cause
+    seclabel u:r:reset_cause:s0
+    class late_start
+    user  reset_cause
+    group system reset_cause nvram input log token_service_native_consumer cache sdcard_rw
+    capabilities SYS\_BOOT SYSLOG DAC\_OVERRIDE
+    disabled
+    oneshot
+
+on boot
+    # give system acess for reset cause files
+    chown reset_cause reset_cause /sys/reset_region/reset
+    chmod 0660 /sys/reset_region/reset
+    chown reset_cause reset_cause /sys/bsi/bsi_data
+    chmod 0440 /sys/bsi/bsi_data
+    chmod 0644 /bbpersist/bsis_priv
+    chmod 0644 /bbpersist/bsis_publ
+    #chown reset_cause reset_cause dev/block/bootdevice/by-name/rcause
+    #chown -H reset_cause reset_cause dev/block/bootdevice/by-name/rcause
+    # for mfg_utild setting ship_mode
+    chmod 0644 /sys/class/power_supply/battery/set_ship_mode
+    # permissions for lowmemorykiller whitelist uids
+    chown root system /sys/module/lowmemorykiller/parameters/whitelist_uids
+    chmod 0664 /sys/module/lowmemorykiller/parameters/whitelist_uids
+    chown system system /sys/devices/virtual/graphics/fb0/sre_enable
+
+
+#start service when timedaemon is ready
+on property:init.svc.time_daemon=running && property:vold.user.0.primary_available=true
+    start reset_cause
+
+# set suid_dumpable to 2 if ddt token is provisioned (debug_extra=1)
+on property:ro.boot.debug_extra=1
+    write /proc/sys/fs/suid_dumpable 2
+
+on property:persist.camera.working=1
+    write /sys/class/goodix_fp/goodix_fp/status 1
+
+on property:persist.camera.working=0
+    write /sys/class/goodix_fp/goodix_fp/status 0
+
+# setup coredumps for ddt token provisioned devices
+# core_pattern is configured as a kernel config option
+on property:metrics.bootstage.post-fs-data=running && property:persist.debug.coredump=1 && property:ro.boot.debug_extra=1
+    mkdir /data/core 777 system system
+    chmod 444 /data/core/*
+
+# start:BBSECURE_PATHTRUST
+# For GSI/VTS testing, disable pathtrust to allow execution of tests from /data/
+on property:ro.product.brand=Android && property:ro.build.flavor=aosp_arm64_a-userdebug
+    write /sys/kernel/security/pathtrust/enforce 0
+# end:BBSECURE_PATHTRUST
+
+# Defect: 5929793, implement "Locker" feature
+# Defect: 5986561, PROP_VALUE_MAX is 92, one property may not enough
+on property:persist.sys.fuse.safebox.wl=* && property:persist.sys.fuse.safebox.wl1=*
+    write /config/sdcardfs/locker_wl "${persist.sys.fuse.safebox.wl};${persist.sys.fuse.safebox.wl1}"
+
+#on property:wlan.sar.status=2
+#    exec - root shell -- /vendor/bin/iwpriv wlan0 setTxMaxPower 16
+
+on property:wlan.sar.status=1
+    exec - root shell -- /vendor/bin/iwpriv wlan0 setTxMaxPower 16
+
+on property:wlan.sar.status=0
+    exec - root shell -- /vendor/bin/iwpriv wlan0 setTxMaxPower 40
+
+# Defect: 6165765, force to use FUSE when device is in production mode
+on property:ro.boot.inproductionflag=true
+    setprop persist.sys.sdcardfs force_off

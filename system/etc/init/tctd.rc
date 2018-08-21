@@ -1,0 +1,5 @@
+service tctd /system/bin/tctd
+    class core
+    socket tctd stream 0666 root root
+    seclabel u:r:tctd:s0
+

@@ -1,0 +1,269 @@
+// sdm636
+
+// for logging purposes
+vlist:: {
+    sensorsampling {
+        15s
+    }
+
+    virt_logger {
+        1
+    }
+
+    sensor_logger_virt_header {
+        slog(sloginfo_c, "hlog:virt," <<
+            concatstr(
+                "virt_glass",",",
+                "virt_metal",",",
+                "virt_plastic",",",
+                "virt_ambient",",",
+                "virt_battery",",",
+                "virt_cpu_c1",",",
+                "virt_cpu_c0",",",
+                "virt_gpu",",",
+                "virt_msm",",",
+                "virt_vdd",",",
+                "virt_pmic",",",
+                "virt_vbat",",",
+                "virt_soc",",",
+                "virt_imax"
+            )
+        )
+    }
+    sensor_logger_virt {
+        slog(sloginfo_c, "log:virt," <<
+            concatstr(
+                virt_glass,",",
+                virt_metal,",",
+                virt_plastic,",",
+                virt_ambient,",",
+                virt_battery,",",
+                virt_cpu_c1_logger,",",
+                virt_cpu_c0_logger,",",
+                virt_gpu_logger,",",
+                virt_msm_logger,",",
+                virt_vdd,",",
+                virt_pmic,",",
+                virt_vbat,",",
+                virt_soc,",",
+                virt_imax
+            )
+        )
+    }
+    sensor_logger_temp_header {
+        slog(sloginfo_c, "hlog:temp," <<
+            concatstr(
+                "qc_tsens0",",",
+                "qc_tsens1",",",
+                "qc_tsens2",",",
+                "qc_tsens3",",",
+                "qc_tsens4",",",
+                "qc_tsens5",",",
+                "qc_tsens6",",",
+                "qc_tsens7",",",
+                "qc_tsens8",",",
+                "qc_tsens9",",",
+                "qc_tsens10",",",
+                "qc_tsens11",",",
+                "qc_tsens12",",",
+                "qc_tsens13",",",
+                "qc_pmic",",",
+                "qc_batt",",",
+                "xo_therm",",",
+                "th_msm",",",
+                "th_emmc",",",
+                "th_ref",",",
+                "th_pa"
+            )
+        )
+    }
+    sensor_logger_temp {
+        slog(sloginfo_c, "log:temp," <<
+            concatstr(
+                qc_tsens0,",",
+                qc_tsens1,",",
+                qc_tsens2,",",
+                qc_tsens3,",",
+                qc_tsens4,",",
+                qc_tsens5,",",
+                qc_tsens6,",",
+                qc_tsens7,",",
+                qc_tsens8,",",
+                qc_tsens9,",",
+                qc_tsens10,",",
+                qc_tsens11,",",
+                qc_tsens12,",",
+                qc_tsens13,",",
+                qc_pmic,",",
+                qc_batt,",",
+                xo_therm,",",
+                th_msm,",",
+                th_emmc,",",
+                th_ref,",",
+                th_pa
+            )
+        )
+    }
+    sensor_logger_batt_header {
+        slog(sloginfo_c, "hlog:batt," <<
+            concatstr(
+                "v_bat",",",
+                "i_bat",",",
+                "ocv",",",
+                "soc",",",
+                "esr"
+            )
+        )
+    }
+    sensor_logger_batt {
+        slog(sloginfo_c, "log:batt," <<
+            concatstr(
+                v_bat,",",
+                (-1 * i_bat),",",
+                ocv,",",
+                soc,",",
+                esr
+            )
+        )
+    }
+    sensor_logger_pow_header {
+        slog(sloginfo_c, "hlog:pow," <<
+            concatstr(
+                "i_usb_max",",",
+                "i_usb_limit",",",
+                "virt_est_sys_power",",",
+                "virt_est_sys_power_err",",",
+                "virt_sys_power",",",
+                "virt_sys_power_max",",",
+                "virt_unexpected_energy",",",
+                "virt_sys_current_max"
+            )
+        )
+    }
+    sensor_logger_pow {
+        slog(sloginfo_c, "log:pow," <<
+            concatstr(
+                i_usb_max,",",
+                i_usb_limit,",",
+                virt_est_sys_power,",",
+                virt_est_sys_power_err,",",
+                virt_sys_power,",",
+                virt_sys_power_max,",",
+                lasteval(virt_unexpected_energy),",",
+                virt_sys_current_max
+            )
+        )
+    }
+    sensor_logger_com_header {
+        slog(sloginfo_c, "hlog:com," <<
+            concatstr(
+                "virt_est_cpu_power",",",
+                "virt_est_gpu_power",",",
+                "virt_est_display_power",",",
+                "virt_est_voice_call_power",",",
+                "virt_est_speaker_power",",",
+                "virt_est_torch_power"
+            )
+        )
+    }
+    sensor_logger_com {
+        slog(sloginfo_c, "log:com," <<
+            concatstr(
+                virt_est_cpu_power,",",
+                virt_est_gpu_power,",",
+                virt_est_display_power,",",
+                virt_est_voice_call_power,",",
+                virt_est_speaker_power,",",
+                virt_est_torch_power
+            )
+        )
+    }
+    sensor_logger_misc_header {
+        slog(sloginfo_c, "hlog:misc," <<
+            concatstr(
+                "cpu_freq0",",",
+                "cpu_freq1",",",
+                "cpu_freq2",",",
+                "cpu_freq3",",",
+                "cpu_freq4",",",
+                "cpu_freq5",",",
+                "cpu_freq6",",",
+                "cpu_freq7",",",
+                "gpu_freq",",",
+                "gpu_load",",",
+                "usb_charging",",",
+                "usb_type",",",
+                "display_backlight",",",
+                "display_backlight_boost",",",
+                "keypad_backlight",",",
+                "voice_call",",",
+                "wlan_active",",",
+                "data_over_cellular",",",
+                "data_over_wlan",",",
+                "booted",",",
+                "loud_speaker_active",",",
+                "headset",",",
+                "screen",",",
+                "gps_active",",",
+                "hdmi_plugged",",",
+                "usb_otg",",",
+                "vdd_restriction"
+            )
+        )
+    }
+    sensor_logger_misc {
+        slog(sloginfo_c, "log:misc," <<
+            concatstr(
+                cpu_freq0,",",
+                cpu_freq1,",",
+                cpu_freq2,",",
+                cpu_freq3,",",
+                cpu_freq4,",",
+                cpu_freq5,",",
+                cpu_freq6,",",
+                cpu_freq7,",",
+                gpu_freq,",",
+                gpu_load,",",
+                usb_charging,",",
+                usb_type,",",
+                display_backlight,",",
+                display_backlight_boost,",",
+                keypad_backlight,",",
+                voice_call,",",
+                wlan_active,",",
+                data_over_cellular,",",
+                data_over_wlan,",",
+                booted,",",
+                loud_speaker_active,",",
+                headset,",",
+                screen,",",
+                gps_active,",",
+                hdmi_plugged,",",
+                usb_otg,",",
+                vdd_state
+            )
+        )
+    }
+    sensor_logger_use_case_header {
+        slog(sloginfo_c, "hlog:uc," <<
+                "uc_idle"
+        )
+    }
+    sensor_logger_use_case {
+        slog(sloginfo_c, "log:uc," <<
+                @false
+        )
+    }
+}
+
+control:: {
+    sensor_logger_ctrl: virsensor = virt_logger,
+                    sampling = sensorsampling,
+                    pre = evalall(sensor_logger_virt_header, sensor_logger_temp_header, sensor_logger_batt_header, sensor_logger_misc_header, sensor_logger_pow_header, sensor_logger_com_header, sensor_logger_use_case_header) {
+                            1 -> evalall(sensor_logger_virt, sensor_logger_temp, sensor_logger_batt, sensor_logger_misc, sensor_logger_pow, sensor_logger_com, sensor_logger_use_case), set(virt_logger, 2);
+                            2 -> evalall(sensor_logger_virt, sensor_logger_temp, sensor_logger_batt, sensor_logger_misc, sensor_logger_pow, sensor_logger_com, sensor_logger_use_case), set(virt_logger, 1)
+    }
+}
+// disable the logger if the verbosity is below 5, sample at 60s when verbosity is 5, sample at 15s when verbosity is 6 or higher
+test::if(verbosity() < 5, stop(sensor_logger_ctrl))
+test::if(verbosity() == 5, set(sensorsampling, 60s))

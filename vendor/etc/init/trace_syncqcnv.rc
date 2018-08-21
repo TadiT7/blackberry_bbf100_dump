@@ -1,0 +1,2 @@
+on property:vold.post_fs_data_done=1 && property:ro.ecid=544
+    exec - root root -- /system/bin/trace_syncqcnv

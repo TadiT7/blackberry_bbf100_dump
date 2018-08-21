@@ -1,0 +1,9 @@
+service ril-daemon /vendor/bin/hw/rild
+    class main
+    user radio
+    group radio cache inet misc audio log readproc wakelock oem_2901
+    capabilities BLOCK_SUSPEND NET_ADMIN NET_RAW
+    # [BUGFIX]-Add-BEGIN by Xijun.Zhang,03/14/2018,Defect-6107753
+    # ril-daemon will be run in 'init.class_main.sh'
+    disabled
+    # [BUGFIX]-Add-END by Xijun.Zhang,03/14/2018,Defect-6107753

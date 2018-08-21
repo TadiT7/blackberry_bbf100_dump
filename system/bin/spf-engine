@@ -1,0 +1,93 @@
+#!/system/bin/sh -x
+
+BASE="/system"
+IMAGETYPE=`getprop ro.boot.imagetype`
+if [ "$IMAGETYPE" == "mfi" ]; then
+  # MFI does not run spfd - do sleep
+  sleep 1000000000
+  exit
+fi
+
+function allow_system_write()
+{
+  node=$1
+  chown 0:1000 $node
+  chmod 0664 $node
+}
+
+# All nodes accessed by SPF Helper (Java) must be set gid=system
+allow_system_write /sys/class/power_supply/usb/current_max
+allow_system_write /sys/class/power_supply/dc/charging_enabled
+allow_system_write /sys/class/power_supply/dc/current_max
+allow_system_write /sys/module/msm_thermal/core_control/cpus_offlined
+allow_system_write /sys/module/msm_thermal/core_control/enabled
+allow_system_write /sys/class/kgsl/kgsl-3d0/devfreq/governor
+allow_system_write /sys/class/kgsl/kgsl-3d0/max_gpuclk
+
+# export LD_PRELOAD=
+export SPF_HELPER_NS=radio,camera,spf,spf_sysfs,spf_sysfs_gpufreq,spf_modem,spf_sysfs_cpufreq,qcom,profile
+export PRODUCT=`getprop ro.product.device`
+export CONFIG_DIR=$BASE/etc
+export VARIANT=`getprop ro.product.name`
+
+export ISM1=`getprop ro.boot.binfo.rev | grep 0x0004`
+export ISM2a=`getprop ro.boot.binfo.rev | grep 0x0005`
+export ISM2b=`getprop ro.boot.binfo.rev | grep 0x0006`
+export ISM3a=`getprop ro.boot.binfo.rev | grep 0x0008`
+export ISM3b=`getprop ro.boot.binfo.rev | grep 0x0009`
+export ISM3c=`getprop ro.boot.binfo.rev | grep 0x000A`
+export ISM3d=`getprop ro.boot.binfo.rev | grep 0x000B`
+if [ -n "$ISM1" ]; then
+REV=_m1
+VARIANT=
+elif [ -n "$ISM2a" ] || [ -n "$ISM2b" ]; then
+REV=_m2
+VARIANT=
+elif [ -n "$ISM3a" ] || [ -n "$ISM3b" ] || [ -n "$ISM3c" ] || [ -n "$ISM3d" ]; then
+REV=_m3
+VARIANT=
+else
+REV=
+  #For !M1 veniceatt/venicevzw launch with venice_att.spf
+  if [ "$VARIANT" == "veniceatt" ]; then
+  VARIANT=_att
+  elif [ "$VARIANT" == "venicevzw" ]; then
+  VARIANT=_att
+  elif [ "$VARIANT" == "venicenaatt" ]; then
+  VARIANT=_att
+  elif [ "$VARIANT" == "venicevzwvzw" ]; then
+  VARIANT=_att
+  else
+  VARIANT=
+  fi
+fi
+
+export READ_ONLY_MODE=
+
+if [ "$PRODUCT" == "hamburg" ]; then
+   export CONFIG_FILE=$CONFIG_DIR/hamburg_monitor.spf
+   export READ_ONLY_MODE="-k"
+elif [ "$PRODUCT" == "argon" ]; then
+   export CONFIG_FILE=$CONFIG_DIR/argon.spf
+elif [ "$PRODUCT" == "bbb100" ]; then
+   export CONFIG_FILE=$CONFIG_DIR/bbb100.spf
+elif [ "$PRODUCT" == "bbd100" ]; then
+   export CONFIG_FILE=$CONFIG_DIR/bbd100.spf
+elif [ "$PRODUCT" == "bbe100" ]; then
+   export CONFIG_FILE=$CONFIG_DIR/bbe100.spf
+elif [ "$(getprop ro.board.platform)" == "sdm660" ]; then
+   export CONFIG_FILE=$CONFIG_DIR/sdm660.spf
+fi
+echo $CONFIG_FILE
+
+#
+# Set library path to proper set of 32- or 64- libs
+#
+ARCH=64
+export LD_LIBRARY_PATH=$BASE/lib${ARCH}:/system/lib${ARCH}
+
+# SPF can only read configs from current directory
+cd $CONFIG_DIR
+
+#start spfd in monioring mode
+exec $BASE/bin/spfd -j $SPF_HELPER_NS -w $READ_ONLY_MODE -o -p 1 -v 5 -f $CONFIG_FILE -s 2

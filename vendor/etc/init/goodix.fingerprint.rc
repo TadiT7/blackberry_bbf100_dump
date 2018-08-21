@@ -1,0 +1,17 @@
+on init
+    chown system system  /dev/goodix_fp
+    chmod 0644 /dev/goodix_fp
+
+on post-fs-data
+    mkdir /data/goodix 0700 system system
+#    chcon u:object_r:persist_drm_file:s0 /data/goodix
+#    setprop goodix.fp.service.ready 0
+
+service gx_fpd /vendor/bin/gx_fpd
+    class late_start
+#    seclabel u:r:gx_fpd:s0
+    user system
+    group system
+#	disable
+#on property:persist.sys.fptype=1
+#	start gx_fpd

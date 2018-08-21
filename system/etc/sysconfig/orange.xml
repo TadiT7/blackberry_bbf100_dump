@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2018 Tcl Corporation Limited -->
+
+<config>
+    <!-- This is meant to be the canonical feature identifying 2017 and newer Orange Experience devices. -->
+    <feature name="com.orange.android.feature.ORANGE_EXPERIENCE" />
+
+    <app-link package="com.orange.update" />
+</config>

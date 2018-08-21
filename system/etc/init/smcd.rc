@@ -1,0 +1,60 @@
+#[FEATURE]-ADD-BEGIN by TCTNB(heng.chen),2016/08/03,Task-2655918-ALM,add smcd service for Feedback
+
+on post-fs-data
+   mkdir /data/endusertest
+   chmod 0771 /data/endusertest
+   chown system system /data/endusertest
+   restorecon /data/endusertest
+
+service smcd /system/bin/smcd
+    class main
+    disabled
+    oneshot
+    group system readproc
+    socket smcd seqpacket 0660 system system
+#[FEATURE]-ADD-END by TCTNB(heng.chen),2016/08/03,Task-2655918-ALM
+
+#[FEATURE]-ADD-BEGIN by TCTNB(heng.chen),2016/08/03,Task-2655918-ALM,add QXDM service for Feedback
+service tct_diag_mdlog /vendor/bin/diag_mdlog -b -s 128 -n 20 -f /data/endusertest/Diag.cfg -o /sdcard/BugReport/diag_logs/ -c
+    disabled
+    oneshot
+    user shell
+    group system oem_2901 sdcard_rw sdcard_r media_rw
+    seclabel u:r:qlogd:s0
+
+service tct_diag_mdlog_l /vendor/bin/diag_mdlog -b -s 128 -n 200 -f /data/endusertest/Diag.cfg -o /sdcard/BugReport/diag_logs/ -c
+    disabled
+    oneshot
+    user shell
+    group system oem_2901 sdcard_rw sdcard_r media_rw
+    seclabel u:r:qlogd:s0
+
+service tct_kill_dm /vendor/bin/diag_mdlog -k
+    disabled
+    oneshot
+    user shell
+    group system oem_2901 sdcard_rw sdcard_r media_rw
+    seclabel u:r:qlogd:s0
+#[FEATURE]-ADD-END by TCTNB(heng.chen),2016/08/03,Task-2655918-ALM
+
+#on property:sys.boot_completed=1
+#    start smcd
+
+on property:vold.user.0.primary_available=true
+    start smcd
+
+on charger
+    start smcd
+
+#on property:tct.mdlog.enable=1
+#    start tct_diag_mdlog
+
+on property:tct.mdlog.enable=1 && property:vold.user.0.primary_available=true
+    start tct_diag_mdlog
+
+on property:tct.mdlog.enable=0
+    start tct_kill_dm
+
+# add for Feedback->crash->Tombstone Dumpable to control Tombstone Enable/Disable
+on property:persist.sys.tombstone.enable=*
+    write /proc/sys/fs/suid_dumpable ${persist.sys.tombstone.enable}

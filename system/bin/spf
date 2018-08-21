@@ -1,0 +1,22 @@
+#!/system/bin/sh
+#
+# Copyright 2015 BlackBerry Ltd.
+# Script to start SPF command-line utility
+#
+base=/system/framework
+
+# export LD_PRELOAD=
+# Check if CPU is aarch64 (64-bit arm)
+ARCH=64
+
+export app_process=app_process${ARCH}
+export LD_LIBRARY_PATH=/vendor/lib${ARCH}:/system/lib${ARCH}:$base
+export CLASSPATH=$base/SpfClient.jar:$base/bbryrilhook.jar:$base/qcrilhook.jar
+export NICE_NAME=com.blackberry.spfcmd
+
+#export DEBUG_FLAGS=-verbose:jni -Xstacktracefile:stacks.trace -Xmethod-trace -Xenable-profiler -Xnodex2oat
+#32 bit dex2oat doesn't run in 64 bit environment (?)
+export DEBUG_FLAGS=-Xnodex2oat
+#export DEBUG_FLAGS=-Ximage:/system/framework/arm${ARCH}/boot.art
+
+exec ${app_process} -Djava.library.path=$base:/system/lib${ARCH}:$base/lib${ARCH} $DEBUG_FLAGS $base --nice-name=${NICE_NAME} com.blackberry.spfcmd.CmdClient "$@"

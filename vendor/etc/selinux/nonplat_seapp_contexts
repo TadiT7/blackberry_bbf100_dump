@@ -1,0 +1,22 @@
+user=system seinfo=platform name=com.tct.endusertest domain=feedback_app type=feedback_app_data_file
+user=system seinfo=platform name=com.jrdcom.jrdlogger domain=safeguard_app type=safeguard_app_data_file
+user=system seinfo=platform name=com.jrdcom.findmeback domain=platform_app type=system_app_data_file
+user=java_swoop domain=java_swoop type=swoop_data_file
+user=system seinfo=platform name=com.blackberry.spf.helper domain=spfhelper_app type=spfhelper_app_data_file
+user=carrier seinfo=platform name=com.ts.android.chameleon.chameleonprovider domain=platform_app type=app_data_file levelFrom=user
+user=oem_2917 seinfo=platform name=com.blackberry.oobe domain=oobe type=app_data_file
+user=system seinfo=platform name=com.android.mmi domain=tctmmi_app type=mmi_app_data_file
+user=_app seinfo=platform name=com.swfp.factory domain=platform_app type=app_data_file levelFrom=user
+user=gps domain=location_app type=location_app_data_file
+user=system seinfo=platform name=com.qualcomm.services.location domain=location_app type=location_app_data_file
+user=system seinfo=platform name=com.qualcomm.location.XT domain=location_app type=location_app_data_file
+user=system seinfo=platform name=com.qualcomm.qti.auth.fidocryptoservice domain=qsee_svc_app type=qsee_svc_app_data_file
+user=system seinfo=platform name=com.qualcomm.qti.securemsm.mdtp.MdtpService domain=mdtpservice_app type=mdtp_svc_app_data_file
+user=system seinfo=platform name=com.qualcomm.qti.qdma domain=qdma_app type=qdma_app_data_file
+user=_app seinfo=platform name=com.qualcomm.timeservice domain=timeservice_app type=app_data_file levelFrom=all
+user=system seinfo=platform name=com.qualcomm.qti.logkit domain=qti_logkit_app type=system_app_data_file
+user=system seinfo=platform name=.imshelperservice domain=imshelper_app type=imshelper_app_data_file
+user=system seinfo=platform name=com.qualcomm.qti.poweroffalarm domain=poweroffalarm_app type=system_app_data_file
+user=_app seinfo=ssgapp domain=ssg_app name=com.qualcomm.qti.qms.service.connectionsecurity type=app_data_file levelFrom=all
+user=_app seinfo=ssgapp domain=ssg_app name=com.qualcomm.qti.qms.service.telemetry type=app_data_file levelFrom=all
+user=_app seinfo=ssgapp domain=ssg_app name=com.qualcomm.qti.qms.service.credentials type=app_data_file levelFrom=all

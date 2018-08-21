@@ -1,0 +1,13 @@
+on post-fs-data && property:ro.ecid=50
+    mkdir /data/misc_ne 01771 system misc
+    mkdir /data/misc_ne/ota_package 01770 system system
+
+service ota_reserved_space /vendor/bin/ota_reserved_space /data/misc_ne/ota_package/dlpkgfile
+    class late_start
+    user system
+    group system
+    disabled
+    oneshot
+
+on property:ro.boot.inproductionflag=false
+    start ota_reserved_space

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2017 Tcl Corporation Limited -->
+
+<!-- Set of paths to look for APKs to install.  Process everything if this file is absent.
+     There is only 2 tags and 3 attributes.
+
+    Tag "pathlist": No attributes.  Simply denotes the root element.
+    Tag "path": Must have a "pathlist" tag parent.  Has 4 attributes:
+        "dir": Mandatory. A directory.  Should be a relative path, but can be a full path.  All relative paths will be from "/oem" (or wherever the OEM partition is mounted).
+        "carrierId": Optional. A comma-separated list of carrier IDs.  If it is absent, it is whitelisted for all carriers.
+        "ecid":Optional. A comma-separated list of ECIDs .  If it is absent, it is whitelisted for all carriers.
+        "hasToken":Optional. A comma-separated list of tkns.  If it is absent, it is whitelisted for all carriers.
+        "inProduction": Optional.  Set to either "true" or "false".  Default is "false".  Only whitelists the APK if the in-production flag matches the attribute value.
+-->
+
+<pathlist>
+	<!-- Apps in /oem/priv-app -->
+	<!--<path dir="/oem/priv-app/DmClient-VZW" ecid="539" />
+	<path dir="/oem/priv-app/ATTDMClient" ecid="50" />
+	<path dir="/oem/priv-app/salestracker" ecid="10025" />-->
+
+	<!-- Apps in /oem/app -->
+	<path dir="/oem/app/COMMON_DeviceSwitch"  />
+    <!--[BUGFIX]-Mod-BEGIN by TCTNB.zhixun.wang,6191226-->
+	<path dir="/oem/app/COMMON_Korean_Alert" carrierId="175,830,831,10540" />
+    <!--[BUGFIX]-Mod-END by TCTNB.zhixun.wang-->
+
+    <!--[BUGFIX]-Mod-BEGIN by TCTNB.yubin.ying,03/07/2018,6099329,-->
+    <path dir="/oem/priv-app/AmazonMobile" carrierId="223,10518,679,702,795,169,680" />
+    <path dir="/oem/priv-app/AmazonAppManager" carrierId="223,10518" />
+    <!--<path dir="/oem/priv-app/TelusCheckup" carrierId="223" />-->
+    <path dir="/oem/priv-app/TelusMyAccount" carrierId="223" />
+    <!--[BUGFIX]-Mod-END by TCTNB.yubin.ying-->
+    <path dir="/oem/priv-app/MyRogers" carrierId="169" />
+    <!--<path dir="/oem/priv-app/AmazonAppManager" carrierId="223,10518" />-->
+
+    <!--[BUGFIX]-Mod-BEGIN by TCTNB.yubin.ying,03/09/2017,4288049,-->
+    <path dir="/oem/priv-app/FidoAccount" carrierId="680" />
+    <!--<path dir="/oem/app/FidoZone" carrierId="680" />
+    <path dir="/oem/app/SpotifyMusic" carrierId="680" />-->
+    <!--[BUGFIX]-Mod-END by TCTNB.yubin.ying-->
+    <!--<path dir="/oem/priv-app/MyATT" ecid="50" />
+    <path dir="/oem/app/serviceEntitlement" ecid="50" />
+    <path dir="/oem/priv-app/VisualVoicemail" ecid="50" />
+    <path dir="/oem/priv-app/ATTSmartWiFi" ecid="50" />-->
+
+
+    <!--[BUGFIX]-Mod-BEGIN by TCTNB.yubin.ying,02/13/2017,4131463,-->
+    <!--<path dir="/oem/app/RELTestool" hasToken="tcl_debug.tkn" />-->
+    <!--[BUGFIX]-Mod-END by TCTNB.yubin.ying-->
+
+    <!--ADD-BEGIN by dingyi 2017/04/27 task-4656455-->
+    <!--<path dir="/oem/app/TctBarometer" hasToken="tcl_debug.tkn" />-->
+    <!--ADD-END by dingyi 2017/04/27 task-4656455-->
+
+    <path dir="/oem/app/SafeGuard" hasToken="tcl_debug.tkn" />
+    <path dir="/oem/app/OneTouchFeedback" hasToken="tcl_debug.tkn" />
+    <!--[BUGFIX]-Mod-BEGIN by TCTNB.yubin.ying,04/26/2017,4594512,-->
+    <excludepath dir="/system/priv-app/TctUserCare" ecid="65,130,229,235,298,303,10504,10514,10519,50,544,10001,10004,10025" />
+    <!--[BUGFIX]-Mod-END by TCTNB.yubin.ying-->
+    <!--ADD-BEGIN by dingyi 2017/07/19 task-5080024-->
+    <!--<excludepath dir="/system/priv-app/Universal" ecid="544,10515,10517,10518,188,10537,405,18" />-->
+    <!--ADD-END by dingyi 2017/07/19 task-5080024-->
+    <path dir="/oem/priv-app/OrangeStore" ecid="10514,10519" />
+    <!--ADD-BEGIN by Xin.Peng 2018/05/30 task-6340732-->
+    <path dir="/oem/priv-app/VZWDMClient" ecid="10534" />
+</pathlist>

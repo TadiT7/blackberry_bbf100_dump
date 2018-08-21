@@ -1,0 +1,4 @@
+service bide-hal-1-0 /vendor/bin/hw/vendor.bbry.hardware.bide@1.0-service
+    class early_hal
+    user bide
+    group bide deviceid

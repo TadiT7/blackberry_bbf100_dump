@@ -1,0 +1,10 @@
+service tct_diag_service /vendor/bin/tct_diag_service
+    class core
+    disabled
+    seclabel u:r:tct_diag_service:s0
+
+on property:ro.boot.inproductionflag=true
+    start tct_diag_service
+
+on property:dev.tct.MMITest=true
+    start tct_diag_service

@@ -1,0 +1,30 @@
+/* Constants */
+constant:: {
+    slogcritical_c {
+        1
+    }
+
+    slogerror_c {
+        2
+    }
+
+    slogwarn_c {
+        3
+    }
+
+    slognotice_c {
+        4
+    }
+
+    sloginfo_c {
+        5
+    }
+
+    slogdebug1_c {
+        6
+    }
+
+    slogdebug2_c {
+        7
+    }
+}

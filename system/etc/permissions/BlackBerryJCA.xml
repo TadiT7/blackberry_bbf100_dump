@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- start:BBSECURE_BBJCA -->
+<permissions>
+    <library name="BlackBerryJCA"
+            file="/system/framework/BlackBerryJCA.jar"/>
+</permissions>
+<!-- end:BBSECURE_BBJCA -->

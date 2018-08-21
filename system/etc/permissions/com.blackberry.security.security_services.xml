@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- start:BBSECURE_BB_SECURITY_SERVICES -->
+<permissions>
+    <library name="com.blackberry.security.security_services"
+            file="/system/framework/com.blackberry.security.security_services.jar"/>
+</permissions>
+<!-- end:BBSECURE_BB_SECURITY_SERVICES -->
